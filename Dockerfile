@@ -8,6 +8,8 @@ RUN npm ci
 
 COPY . .
 
+RUN echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" > .env
+
 RUN npm run build
 
 FROM node:18-alpine AS production
