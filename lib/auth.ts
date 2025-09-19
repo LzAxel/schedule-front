@@ -11,7 +11,7 @@ export interface AuthResponse {
   token: string
 }
 
-const API_BASE_URL = "http://localhost:8081/api"
+const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api`
 
 export class AuthService {
   private static TOKEN_KEY = "auth_token"
