@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { apiService } from "@/lib/api"
 import { Server, Database, Users, BookOpen, Calendar, Clock } from "lucide-react"
-import {getCurrentWeekParity} from "@/lib/parity";
+import {isCurrentWeekEven} from "@/lib/parity";
 
 interface SystemInfo {
   totalLessons: number
@@ -35,7 +35,7 @@ export function SystemInfo() {
         setSystemInfo({
           totalLessons: lessons.length,
           totalAdmins: admins.length,
-          currentParity: getCurrentWeekParity(settings.parity) ? "четная" : "нечетная",
+          currentParity: isCurrentWeekEven(settings.parity) ? "четная" : "нечетная",
           lessonsThisWeek,
           lastUpdate: new Date().toLocaleString("ru-RU"),
         })

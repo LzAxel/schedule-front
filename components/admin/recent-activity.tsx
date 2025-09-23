@@ -5,16 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { apiService, type Lesson } from "@/lib/api"
 import { Clock, MapPin, User } from "lucide-react"
-
-const DAY_NAMES = {
-  Monday: "Понедельник",
-  Tuesday: "Вторник",
-  Wednesday: "Среда",
-  Thursday: "Четверг",
-  Friday: "Пятница",
-  Saturday: "Суббота",
-  Sunday: "Воскресенье",
-}
+import {DAY_NAMES} from "@/const/days";
 
 export function RecentActivity() {
   const [recentLessons, setRecentLessons] = useState<Lesson[]>([])

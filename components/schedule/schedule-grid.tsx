@@ -5,35 +5,16 @@ import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
 import {Badge} from "@/components/ui/badge"
 import {apiService, type Schedule, type Settings} from "@/lib/api"
 import {Clock, MapPin, User, Calendar} from "lucide-react"
-import {getCurrentWeekParity} from "@/lib/parity";
+import {isCurrentWeekEven} from "@/lib/parity";
 import {Toggle} from "@/components/ui/toggle";
 import {Switch} from "@/components/ui/switch";
+import {DAY_NAMES} from "@/const/days";
+import {PAIR_TIMES} from "@/const/pairs";
+import {PARITY_LABELS} from "@/const/parity";
+import {filterNotHiddenLessons, isCurrentLessonDayEmpty} from "@/lib/lessons";
+import {LessonItem} from "@/components/lesson/lesson-item";
 
-const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-const DAY_NAMES = {
-	Monday: "Понедельник",
-	Tuesday: "Вторник",
-	Wednesday: "Среда",
-	Thursday: "Четверг",
-	Friday: "Пятница",
-	Saturday: "Суббота",
-}
-
-const PAIR_TIMES = {
-	1: "08:00 - 09:30",
-	2: "09:40 - 11:10",
-	3: "11:25 - 12:55",
-	4: "13:05 - 14:35",
-	5: "14:45 - 16:15",
-	6: "16:30 - 18:00",
-	7: "18:10 - 19:40",
-}
-
-const TYPE_LABELS = {
-	even: "Четная неделя",
-	odd: "Нечетная неделя",
-	static: "Каждую неделю",
-}
+const DAYS = Object.keys(DAY_NAMES);
 
 export function ScheduleGrid() {
 	const [schedule, setSchedule] = useState<Schedule>({})
@@ -52,7 +33,8 @@ export function ScheduleGrid() {
 			try {
 				const value = JSON.parse(localStorage.getItem("hidePairs")!!) ?? false;
 				setHidePairs(value);
-			} catch (e) {}
+			} catch (e) {
+			}
 		}
 
 		const fetchData = async () => {
@@ -92,11 +74,11 @@ export function ScheduleGrid() {
 		)
 	}
 
-	const currentParity = getCurrentWeekParity(settings?.parity!) ? 'even' : 'odd';
+	const currentParity = isCurrentWeekEven(settings?.parity!) ? 'even' : 'odd';
 
 	return (
 		<div className="min-h-screen bg-muted/30">
-			<div className="container mx-auto px-4 py-8">
+			<div className="w-full max-w-[2500px] mx-auto px-4 py-8">
 				<div className="text-center mb-8">
 					<h1 className="text-4xl font-bold text-balance mb-4">Расписание занятий</h1>
 					{settings && (
@@ -105,7 +87,7 @@ export function ScheduleGrid() {
 							<span className="text-lg text-muted-foreground">
                 Текущая неделя:{" "}
 								<span
-									className="font-semibold text-primary">{getCurrentWeekParity(settings.parity) ? "четная" : "нечетная"}</span>
+									className="font-semibold text-primary">{isCurrentWeekEven(settings.parity) ? "четная" : "нечетная"}</span>
               </span>
 						</div>
 					)}
@@ -116,7 +98,7 @@ export function ScheduleGrid() {
 					</div>
 				</div>
 
-				<div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
+				<div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4">
 					{DAYS.map((day) => (
 						<Card key={day} className="h-fit">
 							<CardHeader className="pb-4">
@@ -125,44 +107,9 @@ export function ScheduleGrid() {
 								</CardTitle>
 							</CardHeader>
 							<CardContent className="space-y-3">
-								{schedule[day] && schedule[day].length > 0 ? (
-									schedule[day].filter((lesson) => !(hidePairs && lesson.type !== 'static' && lesson.type !== currentParity)).map((lesson) => (
-										<div key={lesson.id}
-										     className="rounded-lg border bg-card hover:shadow-md transition-shadow flex flex-row">
-											<div
-												className="w-6 text-xl bg-accent opacity-70 text-white rounded-l-lg flex items-center justify-center">{lesson.pair_number}</div>
-											<div className="p-4 pl-3 flex flex-col grow-1">
-												<div className="flex items-start justify-between mb-3">
-													<h3 className="font-semibold text-card-foreground text-pretty leading-tight">{lesson.name}</h3>
-												</div>
-
-												<div className="space-y-2 text-sm text-muted-foreground">
-													<div className="flex items-center gap-2">
-														<Clock className="h-4 w-4 shrink-0"/>
-														<span>{PAIR_TIMES[lesson.pair_number as keyof typeof PAIR_TIMES]}</span>
-													</div>
-
-													<div className="flex items-center gap-2">
-														<User className="h-4 w-4 shrink-0"/>
-														<span className="text-pretty">{lesson.teacher}</span>
-													</div>
-
-													<div className="flex items-center gap-2">
-														<MapPin className="h-4 w-4 shrink-0"/>
-														<span>{lesson.location}</span>
-													</div>
-												</div>
-
-												{lesson.type !== "static" && (
-													<div className="mt-3 pt-2 border-t">
-														<Badge
-															variant={(lesson.type === (getCurrentWeekParity(settings?.parity!) ? 'even' : 'odd')) ? "default" : "outline"}
-															className="text-xs">
-															{TYPE_LABELS[lesson.type]}
-														</Badge>
-													</div>
-												)}</div>
-										</div>
+								{schedule[day] && !isCurrentLessonDayEmpty(schedule[day], hidePairs, currentParity) ? (
+									filterNotHiddenLessons(schedule[day], hidePairs, currentParity).map((lesson) => (
+										<LessonItem lesson={lesson} currentParity={currentParity}/>
 									))
 								) : (
 									<div className="text-center py-8 text-muted-foreground">

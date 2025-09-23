@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { apiService, type Settings } from "@/lib/api"
 import { useToast } from "@/hooks/use-toast"
 import { Calendar, RotateCcw, Info } from "lucide-react"
-import {getCurrentWeekParity} from "@/lib/parity";
+import {isCurrentWeekEven} from "@/lib/parity";
 
 export function ParityToggle() {
   const [settings, setSettings] = useState<Settings | null>(null)
@@ -44,7 +44,7 @@ export function ParityToggle() {
       setSettings(newSettings)
       toast({
         title: "Четность изменена",
-        description: `Теперь активна ${newSettings.parity === "even" ? "четная" : "нечетная"} неделя`,
+        description: `Настройки сохранены`,
       })
     } catch (error) {
       toast({
@@ -91,7 +91,7 @@ export function ParityToggle() {
             <p className="text-sm text-muted-foreground">Определяет, какие занятия отображаются в расписании</p>
           </div>
           <Badge variant="default" className="text-base px-3 py-1">
-            {getCurrentWeekParity(settings.parity) ? "Четная" : "Нечетная"}
+            {isCurrentWeekEven(settings.parity) ? "Четная" : "Нечетная"}
           </Badge>
         </div>
 

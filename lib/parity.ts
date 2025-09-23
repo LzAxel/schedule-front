@@ -30,7 +30,7 @@ export function getAcademicWeekNumber(currentDate: Date): number {
 	return academicWeekNumber;
 }
 
-export const getCurrentWeekParity = (paritySetting: "even" | "odd") => {
+export const isCurrentWeekEven = (paritySetting: "even" | "odd") => {
 	const weekNumber = getAcademicWeekNumber(new Date());
 	return paritySetting === "even" ? weekNumber % 2 === 0 : weekNumber % 2 !== 0;
 }

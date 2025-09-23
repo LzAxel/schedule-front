@@ -1,0 +1,1 @@
+export type ParityType = 'even' | 'odd' | 'static'
