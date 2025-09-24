@@ -3,16 +3,17 @@
 import {useEffect, useState} from "react"
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
 import {Badge} from "@/components/ui/badge"
-import {apiService, type Schedule, type Settings} from "@/lib/api"
+import {apiService, Lesson, type Schedule, type Settings} from "@/lib/api"
 import {Clock, MapPin, User, Calendar} from "lucide-react"
 import {isCurrentWeekEven} from "@/lib/parity";
 import {Toggle} from "@/components/ui/toggle";
 import {Switch} from "@/components/ui/switch";
 import {DAY_NAMES} from "@/const/days";
-import {PAIR_TIMES} from "@/const/pairs";
+import {MAX_PAIRS_COUNT, PAIR_TIMES} from "@/const/pairs";
 import {PARITY_LABELS} from "@/const/parity";
 import {filterNotHiddenLessons, isCurrentLessonDayEmpty} from "@/lib/lessons";
 import {LessonItem} from "@/components/lesson/lesson-item";
+import {CoupledLessonItem} from "@/components/lesson/copuled-lesson-item";
 
 const DAYS = Object.keys(DAY_NAMES);
 
@@ -108,9 +109,24 @@ export function ScheduleGrid() {
 							</CardHeader>
 							<CardContent className="space-y-3">
 								{schedule[day] && !isCurrentLessonDayEmpty(schedule[day], hidePairs, currentParity) ? (
-									filterNotHiddenLessons(schedule[day], hidePairs, currentParity).map((lesson) => (
-										<LessonItem lesson={lesson} currentParity={currentParity}/>
-									))
+									filterNotHiddenLessons(schedule[day], hidePairs, currentParity).reduce((prev, lesson) => {
+										if (!prev[lesson.pair_number - 1]) {
+											prev[lesson.pair_number - 1] = []
+										}
+										prev[lesson.pair_number - 1].push(lesson);
+										return prev;
+									}, new Array(MAX_PAIRS_COUNT) as Array<Lesson[]>)
+										.map((lesson, index) => {
+											if (lesson.length === 2) {
+												return <CoupledLessonItem
+													key={`${day}-${lesson.length}-${lesson[0].pair_number}-${index}`}
+													lessons={lesson} currentParity={currentParity}/>
+											} else if (lesson.length === 1) {
+												return <LessonItem
+													key={`${day}-${lesson.length}-${lesson[0].pair_number}-${index}`}
+													lesson={lesson[0]} currentParity={currentParity}/>
+											}
+										})
 								) : (
 									<div className="text-center py-8 text-muted-foreground">
 										<Calendar className="h-12 w-12 mx-auto mb-3 opacity-50"/>

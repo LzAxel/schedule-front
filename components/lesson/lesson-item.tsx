@@ -21,10 +21,13 @@ export const LessonItem: React.FC<Props> = ({lesson, onEdit, onDelete, isEditabl
 	return <Card key={lesson.id}
 	             className="flex flex-row p-0 hover:shadow-md transition-shadow gap-0 overflow-hidden">
 		<div
-			className="w-6 text-xl bg-accent opacity-70 text-white rounded-l flex items-center justify-center shrink-0">{lesson.pair_number}</div>
-		<div className="p-4 pl-2 flex flex-col grow-1">
-			<CardHeader className="pb-3 pl-2 pr-2">
-				<div className="flex items-start justify-between overflow-hidden">
+			className="w-6 text-xl bg-accent opacity-80 text-white rounded-l flex items-center justify-center shrink-0">{lesson.pair_number}</div>
+		<div className="p-3 pl-2 flex flex-col grow-1">
+			<CardHeader className="block pt-0 pl-2 pr-2 pb-2">
+				<div className="flex flex-col items-start gap-1 overflow-hidden">
+					<div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+						<span>{PAIR_TIMES[lesson.pair_number as keyof typeof PAIR_TIMES]}</span>
+					</div>
 					<CardTitle
 						className="text-lg text-pretty leading-tight overflow-hidden truncate">{lesson.name}</CardTitle>
 				</div>
@@ -32,17 +35,7 @@ export const LessonItem: React.FC<Props> = ({lesson, onEdit, onDelete, isEditabl
 			<CardContent className="space-y-3 pl-2 pr-0 flex flex-col grow-1">
 				<div className="space-y-2 text-sm">
 					<div className="flex items-center gap-2 text-muted-foreground">
-						<Calendar className="h-4 w-4 shrink-0"/>
-						<span>{DAY_NAMES[lesson.day as keyof typeof DAY_NAMES]}</span>
-					</div>
-
-					<div className="flex items-center gap-2 text-muted-foreground">
-						<Clock className="h-4 w-4 shrink-0"/>
-						<span>{PAIR_TIMES[lesson.pair_number as keyof typeof PAIR_TIMES]}</span>
-					</div>
-
-					<div className="flex items-center gap-2 text-muted-foreground">
-						<User className="h-4 w-4 shrink-0"/>
+					<User className="h-4 w-4 shrink-0"/>
 						<span className="text-pretty">{lesson.teacher}</span>
 					</div>
 
@@ -52,7 +45,7 @@ export const LessonItem: React.FC<Props> = ({lesson, onEdit, onDelete, isEditabl
 					</div>
 				</div>
 
-				<div className="pt-2 border-t">
+				<div className="">
 					<Badge variant={(lesson.type === "static" || (lesson.type === currentParity)) ? "default" : "outline"}
 					       className="text-xs">
 						{PARITY_LABELS[lesson.type]}
