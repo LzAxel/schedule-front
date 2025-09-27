@@ -1,34 +1,34 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { AuthGuard } from "@/components/auth/auth-guard"
-import { AdminLayout } from "@/components/admin/admin-layout"
-import { LessonForm } from "@/components/admin/lesson-form"
-import { LessonsList } from "@/components/admin/lessons-list"
-import { Button } from "@/components/ui/button"
-import type { Lesson } from "@/lib/api"
-import { Plus, ArrowLeft } from "lucide-react"
+import { useState } from 'react';
+import { AuthGuard } from '@/components/auth/auth-guard';
+import { AdminLayout } from '@/components/admin/admin-layout';
+import { LessonForm } from '@/components/admin/lesson-form';
+import { LessonsList } from '@/components/admin/lessons-list';
+import { Button } from '@/components/ui/button';
+import type { Lesson } from '@/lib/api';
+import { Plus, ArrowLeft } from 'lucide-react';
 
 export default function LessonsPage() {
-  const [showForm, setShowForm] = useState(false)
-  const [editingLesson, setEditingLesson] = useState<Lesson | undefined>()
-  const [refreshTrigger, setRefreshTrigger] = useState(0)
+  const [showForm, setShowForm] = useState(false);
+  const [editingLesson, setEditingLesson] = useState<Lesson | undefined>();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleEdit = (lesson: Lesson) => {
-    setEditingLesson(lesson)
-    setShowForm(true)
-  }
+    setEditingLesson(lesson);
+    setShowForm(true);
+  };
 
   const handleFormSuccess = () => {
-    setShowForm(false)
-    setEditingLesson(undefined)
-    setRefreshTrigger((prev) => prev + 1)
-  }
+    setShowForm(false);
+    setEditingLesson(undefined);
+    setRefreshTrigger((prev) => prev + 1);
+  };
 
   const handleFormCancel = () => {
-    setShowForm(false)
-    setEditingLesson(undefined)
-  }
+    setShowForm(false);
+    setEditingLesson(undefined);
+  };
 
   return (
     <AuthGuard>
@@ -61,5 +61,5 @@ export default function LessonsPage() {
         </div>
       </AdminLayout>
     </AuthGuard>
-  )
+  );
 }

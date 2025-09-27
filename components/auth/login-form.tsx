@@ -1,46 +1,46 @@
-"use client"
+'use client';
 
-import type React from "react"
+import type React from 'react';
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AuthService } from "@/lib/auth"
-import { useToast } from "@/hooks/use-toast"
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { AuthService } from '@/lib/auth';
+import { useToast } from '@/hooks/use-toast';
 
 export function LoginForm() {
   const [credentials, setCredentials] = useState({
-    username: "",
-    password: "",
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
-  const { toast } = useToast()
+    username: '',
+    password: '',
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
     try {
-      await AuthService.login(credentials)
+      await AuthService.login(credentials);
       toast({
-        title: "Успешный вход",
-        description: "Добро пожаловать в админ панель!",
-      })
-      router.push("/admin")
+        title: 'Успешный вход',
+        description: 'Добро пожаловать в админ панель!',
+      });
+      router.push('/admin');
     } catch (error) {
       toast({
-        title: "Ошибка входа",
-        description: "Неверные учетные данные",
-        variant: "destructive",
-      })
+        title: 'Ошибка входа',
+        description: 'Неверные учетные данные',
+        variant: 'destructive',
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/50 p-4">
@@ -74,11 +74,11 @@ export function LoginForm() {
               />
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Вход..." : "Войти"}
+              {isLoading ? 'Вход...' : 'Войти'}
             </Button>
           </form>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

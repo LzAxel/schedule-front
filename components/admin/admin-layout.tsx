@@ -1,12 +1,12 @@
-"use client"
+'use client';
 
-import type React from "react"
+import type React from 'react';
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { AuthService } from "@/lib/auth"
-import { Calendar, BookOpen, Users, Settings, LogOut, Menu, X } from "lucide-react"
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { AuthService } from '@/lib/auth';
+import { Calendar, BookOpen, Users, Settings, LogOut, Menu, X } from 'lucide-react';
 
 interface AdminLayoutProps {
   children: React.ReactNode
@@ -14,25 +14,25 @@ interface AdminLayoutProps {
 }
 
 const navigation = [
-  { id: "dashboard", label: "Панель управления", icon: Calendar, href: "/admin" },
-  { id: "lessons", label: "Управление занятиями", icon: BookOpen, href: "/admin/lessons" },
-  { id: "admins", label: "Администраторы", icon: Users, href: "/admin/admins" },
-  { id: "settings", label: "Настройки", icon: Settings, href: "/admin/settings" },
-]
+  { id: 'dashboard', label: 'Панель управления', icon: Calendar, href: '/admin' },
+  { id: 'lessons', label: 'Управление занятиями', icon: BookOpen, href: '/admin/lessons' },
+  { id: 'admins', label: 'Администраторы', icon: Users, href: '/admin/admins' },
+  { id: 'settings', label: 'Настройки', icon: Settings, href: '/admin/settings' },
+];
 
 export function AdminLayout({ children, activeTab }: AdminLayoutProps) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const router = useRouter()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
 
   const handleLogout = () => {
-    AuthService.logout()
-    router.push("/login")
-  }
+    AuthService.logout();
+    router.push('/login');
+  };
 
   const handleNavigation = (href: string) => {
-    router.push(href)
-    setIsMobileMenuOpen(false)
-  }
+    router.push(href);
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -52,7 +52,7 @@ export function AdminLayout({ children, activeTab }: AdminLayoutProps) {
       <div
         className={`
         fixed inset-y-0 left-0 z-40 w-64 bg-background border-r transform transition-transform duration-200 ease-in-out
-        ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 lg:inset-0
       `}
       >
@@ -64,20 +64,20 @@ export function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 
           <nav className="flex-1 p-4 space-y-2">
             {navigation.map((item) => {
-              const Icon = item.icon
-              const isActive = activeTab === item.id
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
 
               return (
                 <Button
                   key={item.id}
-                  variant={isActive ? "default" : "ghost"}
+                  variant={isActive ? 'default' : 'ghost'}
                   className="w-full justify-start"
                   onClick={() => handleNavigation(item.href)}
                 >
                   <Icon className="h-4 w-4 mr-3" />
                   {item.label}
                 </Button>
-              )
+              );
             })}
           </nav>
 
@@ -104,5 +104,5 @@ export function AdminLayout({ children, activeTab }: AdminLayoutProps) {
         <div className="p-4 lg:p-8">{children}</div>
       </div>
     </div>
-  )
+  );
 }

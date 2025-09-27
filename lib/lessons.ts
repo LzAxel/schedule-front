@@ -1,5 +1,5 @@
-import {Lesson} from "@/lib/api";
-import {ParityType} from "@/types/parity";
+import {Lesson} from '@/lib/api';
+import {ParityType} from '@/types/parity';
 
 
 export const filterNotHiddenLessons = (lessons: Lesson[], isHidePairs: boolean, currentParity: ParityType) => {
@@ -7,17 +7,17 @@ export const filterNotHiddenLessons = (lessons: Lesson[], isHidePairs: boolean, 
 		return lessons;
 	}
 
-	return lessons.filter((lesson) => lesson.type === 'static' || lesson.type === currentParity)
-}
+	return lessons.filter((lesson) => lesson.type === 'static' || lesson.type === currentParity);
+};
 
 export const isCurrentLessonDayEmpty = (lessons: Lesson[], isHidePairs: boolean, currentParity: ParityType) => {
 	if (lessons.length < 1) {
-		return true
+		return true;
 	}
 
 	if (isHidePairs) {
-		return filterNotHiddenLessons(lessons, true, currentParity).length < 1
+		return filterNotHiddenLessons(lessons, true, currentParity).length < 1;
 	}
 
 	return false;
-}
+};

@@ -1,61 +1,61 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { apiService, type Settings } from "@/lib/api"
-import { useToast } from "@/hooks/use-toast"
-import { Calendar, RotateCcw, Info } from "lucide-react"
-import {isCurrentWeekEven} from "@/lib/parity";
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { apiService, type Settings } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
+import { Calendar, RotateCcw, Info } from 'lucide-react';
+import {isCurrentWeekEven} from '@/lib/parity';
 
 export function ParityToggle() {
-  const [settings, setSettings] = useState<Settings | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isToggling, setIsToggling] = useState(false)
-  const { toast } = useToast()
+  const [settings, setSettings] = useState<Settings | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isToggling, setIsToggling] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        setIsLoading(true)
-        const data = await apiService.getParity()
-        setSettings(data)
+        setIsLoading(true);
+        const data = await apiService.getParity();
+        setSettings(data);
       } catch (error) {
         toast({
-          title: "Ошибка",
-          description: "Не удалось загрузить настройки четности",
-          variant: "destructive",
-        })
+          title: 'Ошибка',
+          description: 'Не удалось загрузить настройки четности',
+          variant: 'destructive',
+        });
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchSettings()
-  }, [toast])
+    fetchSettings();
+  }, [toast]);
 
   const handleToggle = async () => {
-    if (!settings) return
+    if (!settings) return;
 
-    setIsToggling(true)
+    setIsToggling(true);
     try {
-      const newSettings = await apiService.toggleParity()
-      setSettings(newSettings)
+      const newSettings = await apiService.toggleParity();
+      setSettings(newSettings);
       toast({
-        title: "Четность изменена",
-        description: `Настройки сохранены`,
-      })
+        title: 'Четность изменена',
+        description: 'Настройки сохранены',
+      });
     } catch (error) {
       toast({
-        title: "Ошибка",
-        description: "Не удалось изменить четность недели",
-        variant: "destructive",
-      })
+        title: 'Ошибка',
+        description: 'Не удалось изменить четность недели',
+        variant: 'destructive',
+      });
     } finally {
-      setIsToggling(false)
+      setIsToggling(false);
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -70,10 +70,10 @@ export function ParityToggle() {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
-  if (!settings) return null
+  if (!settings) return null;
 
   return (
     <Card>
@@ -91,15 +91,15 @@ export function ParityToggle() {
             <p className="text-sm text-muted-foreground">Определяет, какие занятия отображаются в расписании</p>
           </div>
           <Badge variant="default" className="text-base px-3 py-1">
-            {isCurrentWeekEven(settings.parity) ? "Четная" : "Нечетная"}
+            {isCurrentWeekEven(settings.parity) ? 'Четная' : 'Нечетная'}
           </Badge>
         </div>
 
         <Button onClick={handleToggle} disabled={isToggling} className="w-full">
           <RotateCcw className="h-4 w-4 mr-2" />
-          {isToggling ? "Переключение..." : "Переключить четность"}
+          {isToggling ? 'Переключение...' : 'Переключить четность'}
         </Button>
       </CardContent>
     </Card>
-  )
+  );
 }

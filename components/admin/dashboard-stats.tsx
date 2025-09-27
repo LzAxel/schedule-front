@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { apiService } from "@/lib/api"
-import { BookOpen, Users, Calendar, Clock } from "lucide-react"
+import { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { apiService } from '@/lib/api';
+import { BookOpen, Users, Calendar, Clock } from 'lucide-react';
 
 interface DashboardStats {
   totalLessons: number
@@ -13,37 +13,37 @@ interface DashboardStats {
 }
 
 export function DashboardStats() {
-  const [stats, setStats] = useState<DashboardStats | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        setIsLoading(true)
+        setIsLoading(true);
         const [lessons, admins, settings, schedule] = await Promise.all([
           apiService.getLessons(),
           apiService.getAdmins(),
           apiService.getParity(),
           apiService.getSchedule(),
-        ])
+        ]);
 
-        const lessonsThisWeek = Object.values(schedule).flat().length
+        const lessonsThisWeek = Object.values(schedule).flat().length;
 
         setStats({
           totalLessons: lessons.length,
           totalAdmins: admins.length,
-          currentParity: settings.parity === "even" ? "четная" : "нечетная",
+          currentParity: settings.parity === 'even' ? 'четная' : 'нечетная',
           lessonsThisWeek,
-        })
+        });
       } catch (error) {
-        console.error("Error fetching dashboard stats:", error)
+        console.error('Error fetching dashboard stats:', error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchStats()
-  }, [])
+    fetchStats();
+  }, []);
 
   if (isLoading) {
     return (
@@ -61,42 +61,42 @@ export function DashboardStats() {
           </Card>
         ))}
       </div>
-    )
+    );
   }
 
-  if (!stats) return null
+  if (!stats) return null;
 
   const statCards = [
     {
-      title: "Всего занятий",
+      title: 'Всего занятий',
       value: stats.totalLessons,
       icon: BookOpen,
-      description: "в базе данных",
+      description: 'в базе данных',
     },
     {
-      title: "Администраторы",
+      title: 'Администраторы',
       value: stats.totalAdmins,
       icon: Users,
-      description: "активных пользователей",
+      description: 'активных пользователей',
     },
     {
-      title: "Текущая неделя",
+      title: 'Текущая неделя',
       value: stats.currentParity,
       icon: Calendar,
-      description: "четность недели",
+      description: 'четность недели',
     },
     {
-      title: "Занятий на неделе",
+      title: 'Занятий на неделе',
       value: stats.lessonsThisWeek,
       icon: Clock,
-      description: "активных занятий",
+      description: 'активных занятий',
     },
-  ]
+  ];
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {statCards.map((stat, index) => {
-        const Icon = stat.icon
+        const Icon = stat.icon;
         return (
           <Card key={index}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -108,8 +108,8 @@ export function DashboardStats() {
               <p className="text-xs text-muted-foreground">{stat.description}</p>
             </CardContent>
           </Card>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

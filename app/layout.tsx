@@ -1,15 +1,15 @@
-import type React from "react"
-import type {Metadata} from "next"
-import {GeistSans} from "geist/font/sans"
-import {GeistMono} from "geist/font/mono"
-import {Analytics} from "@vercel/analytics/next"
-import {Toaster} from "@/components/ui/toaster"
-import {Suspense} from "react"
-import "./globals.css"
+import type React from 'react';
+import type {Metadata} from 'next';
+import {GeistSans} from 'geist/font/sans';
+import {GeistMono} from 'geist/font/mono';
+import {Analytics} from '@vercel/analytics/next';
+import {Toaster} from '@/components/ui/toaster';
+import {Suspense} from 'react';
+import './globals.css';
 
 export const metadata: Metadata = {
-	title: "Расписание Уника",
-}
+	title: 'Расписание Уника',
+};
 
 export default function RootLayout({
 	                                   children,
@@ -26,5 +26,5 @@ export default function RootLayout({
 		<Analytics/>
 		</body>
 		</html>
-	)
+	);
 }

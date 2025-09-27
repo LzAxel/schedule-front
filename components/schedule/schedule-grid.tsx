@@ -1,38 +1,38 @@
-"use client"
+'use client';
 
-import {useEffect, useState} from "react"
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
-import {Badge} from "@/components/ui/badge"
-import {apiService, Lesson, type Schedule, type Settings} from "@/lib/api"
-import {Clock, MapPin, User, Calendar} from "lucide-react"
-import {isCurrentWeekEven} from "@/lib/parity";
-import {Toggle} from "@/components/ui/toggle";
-import {Switch} from "@/components/ui/switch";
-import {DAY_NAMES} from "@/const/days";
-import {MAX_PAIRS_COUNT, PAIR_TIMES} from "@/const/pairs";
-import {PARITY_LABELS} from "@/const/parity";
-import {filterNotHiddenLessons, isCurrentLessonDayEmpty} from "@/lib/lessons";
-import {LessonItem} from "@/components/lesson/lesson-item";
-import {CoupledLessonItem} from "@/components/lesson/copuled-lesson-item";
+import {useEffect, useState} from 'react';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {Badge} from '@/components/ui/badge';
+import {apiService, Lesson, type Schedule, type Settings} from '@/lib/api';
+import {Clock, MapPin, User, Calendar} from 'lucide-react';
+import {isCurrentWeekEven} from '@/lib/parity';
+import {Toggle} from '@/components/ui/toggle';
+import {Switch} from '@/components/ui/switch';
+import {DAY_NAMES} from '@/const/days';
+import {MAX_PAIRS_COUNT, PAIR_TIMES} from '@/const/pairs';
+import {PARITY_LABELS} from '@/const/parity';
+import {filterNotHiddenLessons, isCurrentLessonDayEmpty} from '@/lib/lessons';
+import {LessonItem} from '@/components/lesson/lesson-item';
+import {CoupledLessonItem} from '@/components/lesson/copuled-lesson-item';
 
 const DAYS = Object.keys(DAY_NAMES);
 
 export function ScheduleGrid() {
-	const [schedule, setSchedule] = useState<Schedule>({})
-	const [settings, setSettings] = useState<Settings | null>(null)
-	const [isLoading, setIsLoading] = useState(true)
-	const [error, setError] = useState<string | null>(null)
+	const [schedule, setSchedule] = useState<Schedule>({});
+	const [settings, setSettings] = useState<Settings | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 	const [hidePairs, setHidePairs] = useState(false);
 
 	const changeHidePairs = (value: boolean) => {
-		localStorage.setItem("hidePairs", JSON.stringify(value))
-		setHidePairs(value)
-	}
+		localStorage.setItem('hidePairs', JSON.stringify(value));
+		setHidePairs(value);
+	};
 
 	useEffect(() => {
 		if (window) {
 			try {
-				const value = JSON.parse(localStorage.getItem("hidePairs")!!) ?? false;
+				const value = JSON.parse(localStorage.getItem('hidePairs')!!) ?? false;
 				setHidePairs(value);
 			} catch (e) {
 			}
@@ -40,27 +40,27 @@ export function ScheduleGrid() {
 
 		const fetchData = async () => {
 			try {
-				setIsLoading(true)
-				const [scheduleData, settingsData] = await Promise.all([apiService.getSchedule(), apiService.getParity()])
-				setSchedule(scheduleData)
-				setSettings(settingsData)
+				setIsLoading(true);
+				const [scheduleData, settingsData] = await Promise.all([apiService.getSchedule(), apiService.getParity()]);
+				setSchedule(scheduleData);
+				setSettings(settingsData);
 			} catch (err) {
-				setError("Ошибка загрузки расписания")
-				console.error("Error fetching schedule:", err)
+				setError('Ошибка загрузки расписания');
+				console.error('Error fetching schedule:', err);
 			} finally {
-				setIsLoading(false)
+				setIsLoading(false);
 			}
-		}
+		};
 
-		fetchData()
-	}, [])
+		fetchData();
+	}, []);
 
 	if (isLoading) {
 		return (
 			<div className="min-h-screen flex items-center justify-center">
 				<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
 			</div>
-		)
+		);
 	}
 
 	if (error) {
@@ -72,7 +72,7 @@ export function ScheduleGrid() {
 					</CardContent>
 				</Card>
 			</div>
-		)
+		);
 	}
 
 	const currentParity = isCurrentWeekEven(settings?.parity!) ? 'even' : 'odd';
@@ -86,9 +86,9 @@ export function ScheduleGrid() {
 						<div className="flex items-center justify-center gap-2">
 							<Calendar className="h-5 w-5 text-muted-foreground"/>
 							<span className="text-lg text-muted-foreground">
-                Текущая неделя:{" "}
+                Текущая неделя:{' '}
 								<span
-									className="font-semibold text-primary">{isCurrentWeekEven(settings.parity) ? "четная" : "нечетная"}</span>
+									className="font-semibold text-primary">{isCurrentWeekEven(settings.parity) ? 'четная' : 'нечетная'}</span>
               </span>
 						</div>
 					)}
@@ -111,7 +111,7 @@ export function ScheduleGrid() {
 								{schedule[day] && !isCurrentLessonDayEmpty(schedule[day], hidePairs, currentParity) ? (
 									filterNotHiddenLessons(schedule[day], hidePairs, currentParity).reduce((prev, lesson) => {
 										if (!prev[lesson.pair_number - 1]) {
-											prev[lesson.pair_number - 1] = []
+											prev[lesson.pair_number - 1] = [];
 										}
 										prev[lesson.pair_number - 1].push(lesson);
 										return prev;
@@ -120,11 +120,11 @@ export function ScheduleGrid() {
 											if (lesson.length === 2) {
 												return <CoupledLessonItem
 													key={`${day}-${lesson.length}-${lesson[0].pair_number}-${index}`}
-													lessons={lesson} currentParity={currentParity}/>
+													lessons={lesson} currentParity={currentParity}/>;
 											} else if (lesson.length === 1) {
 												return <LessonItem
 													key={`${day}-${lesson.length}-${lesson[0].pair_number}-${index}`}
-													lesson={lesson[0]} currentParity={currentParity}/>
+													lesson={lesson[0]} currentParity={currentParity}/>;
 											}
 										})
 								) : (
@@ -139,5 +139,5 @@ export function ScheduleGrid() {
 				</div>
 			</div>
 		</div>
-	)
+	);
 }

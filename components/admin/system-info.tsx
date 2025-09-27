@@ -1,11 +1,11 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { apiService } from "@/lib/api"
-import { Server, Database, Users, BookOpen, Calendar, Clock } from "lucide-react"
-import {isCurrentWeekEven} from "@/lib/parity";
+import { useEffect, useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { apiService } from '@/lib/api';
+import { Server, Database, Users, BookOpen, Calendar, Clock } from 'lucide-react';
+import {isCurrentWeekEven} from '@/lib/parity';
 
 interface SystemInfo {
   totalLessons: number
@@ -16,38 +16,38 @@ interface SystemInfo {
 }
 
 export function SystemInfo() {
-  const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchSystemInfo = async () => {
       try {
-        setIsLoading(true)
+        setIsLoading(true);
         const [lessons, admins, settings, schedule] = await Promise.all([
           apiService.getLessons(),
           apiService.getAdmins(),
           apiService.getParity(),
           apiService.getSchedule(),
-        ])
+        ]);
 
-        const lessonsThisWeek = Object.values(schedule).flat().length
+        const lessonsThisWeek = Object.values(schedule).flat().length;
 
         setSystemInfo({
           totalLessons: lessons.length,
           totalAdmins: admins.length,
-          currentParity: isCurrentWeekEven(settings.parity) ? "четная" : "нечетная",
+          currentParity: isCurrentWeekEven(settings.parity) ? 'четная' : 'нечетная',
           lessonsThisWeek,
-          lastUpdate: new Date().toLocaleString("ru-RU"),
-        })
+          lastUpdate: new Date().toLocaleString('ru-RU'),
+        });
       } catch (error) {
-        console.error("Error fetching system info:", error)
+        console.error('Error fetching system info:', error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchSystemInfo()
-  }, [])
+    fetchSystemInfo();
+  }, []);
 
   if (isLoading) {
     return (
@@ -66,37 +66,37 @@ export function SystemInfo() {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
-  if (!systemInfo) return null
+  if (!systemInfo) return null;
 
   const infoItems = [
     {
-      label: "Всего занятий",
+      label: 'Всего занятий',
       value: systemInfo.totalLessons,
       icon: BookOpen,
-      color: "text-blue-600 dark:text-blue-400",
+      color: 'text-blue-600 dark:text-blue-400',
     },
     {
-      label: "Администраторы",
+      label: 'Администраторы',
       value: systemInfo.totalAdmins,
       icon: Users,
-      color: "text-green-600 dark:text-green-400",
+      color: 'text-green-600 dark:text-green-400',
     },
     {
-      label: "Текущая неделя",
+      label: 'Текущая неделя',
       value: systemInfo.currentParity,
       icon: Calendar,
-      color: "text-purple-600 dark:text-purple-400",
+      color: 'text-purple-600 dark:text-purple-400',
     },
     {
-      label: "Занятий на неделе",
+      label: 'Занятий на неделе',
       value: systemInfo.lessonsThisWeek,
       icon: Clock,
-      color: "text-orange-600 dark:text-orange-400",
+      color: 'text-orange-600 dark:text-orange-400',
     },
-  ]
+  ];
 
   return (
     <Card>
@@ -110,7 +110,7 @@ export function SystemInfo() {
       <CardContent className="space-y-4">
         <div className="grid gap-3">
           {infoItems.map((item, index) => {
-            const Icon = item.icon
+            const Icon = item.icon;
             return (
               <div key={index} className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
                 <div className="flex items-center gap-3">
@@ -119,7 +119,7 @@ export function SystemInfo() {
                 </div>
                 <Badge variant="secondary">{item.value}</Badge>
               </div>
-            )
+            );
           })}
         </div>
 
@@ -134,5 +134,5 @@ export function SystemInfo() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

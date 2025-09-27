@@ -1,59 +1,59 @@
-"use client"
+'use client';
 
-import {useEffect, useState} from "react"
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
-import {Badge} from "@/components/ui/badge"
-import {apiService, type Admin} from "@/lib/api"
-import {useToast} from "@/hooks/use-toast"
-import {User, Shield, Crown, Trash2} from "lucide-react"
-import {Button} from "@/components/ui/button";
+import {useEffect, useState} from 'react';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {Badge} from '@/components/ui/badge';
+import {apiService, type Admin} from '@/lib/api';
+import {useToast} from '@/hooks/use-toast';
+import {User, Shield, Crown, Trash2} from 'lucide-react';
+import {Button} from '@/components/ui/button';
 
 interface AdminsListProps {
 	refreshTrigger: number
 }
 
 export function AdminsList({refreshTrigger}: AdminsListProps) {
-	const [admins, setAdmins] = useState<Admin[]>([])
-	const [isLoading, setIsLoading] = useState(true)
-	const {toast} = useToast()
+	const [admins, setAdmins] = useState<Admin[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const {toast} = useToast();
 
 	const handleDelete = (id: number) => {
 		apiService.deleteAdmin(id).then(() => {
 			toast({
-				title: "Администратор удалён",
-				variant: "default"
-			})
-			setAdmins((prev) => prev.filter((admin) => admin.id !== id))
+				title: 'Администратор удалён',
+				variant: 'default'
+			});
+			setAdmins((prev) => prev.filter((admin) => admin.id !== id));
 		}).catch(() => {
 			toast({
-				title: "Ошибка",
-				description: "Не удалось удалить администратора",
-				variant: "destructive",
-			})
-		})
-	}
+				title: 'Ошибка',
+				description: 'Не удалось удалить администратора',
+				variant: 'destructive',
+			});
+		});
+	};
 
 	useEffect(() => {
 		const fetchAdmins = async () => {
 			try {
-				setIsLoading(true)
-				const data = await apiService.getAdmins()
+				setIsLoading(true);
+				const data = await apiService.getAdmins();
 				// Sort admins by ID to show the original admin first
-				const sortedAdmins = data.sort((a, b) => a.id - b.id)
-				setAdmins(sortedAdmins)
+				const sortedAdmins = data.sort((a, b) => a.id - b.id);
+				setAdmins(sortedAdmins);
 			} catch (error) {
 				toast({
-					title: "Ошибка",
-					description: "Не удалось загрузить список администраторов",
-					variant: "destructive",
-				})
+					title: 'Ошибка',
+					description: 'Не удалось загрузить список администраторов',
+					variant: 'destructive',
+				});
 			} finally {
-				setIsLoading(false)
+				setIsLoading(false);
 			}
-		}
+		};
 
-		fetchAdmins()
-	}, [refreshTrigger, toast])
+		fetchAdmins();
+	}, [refreshTrigger, toast]);
 
 	if (isLoading) {
 		return (
@@ -72,7 +72,7 @@ export function AdminsList({refreshTrigger}: AdminsListProps) {
 					</Card>
 				))}
 			</div>
-		)
+		);
 	}
 
 	if (admins.length === 0) {
@@ -85,13 +85,13 @@ export function AdminsList({refreshTrigger}: AdminsListProps) {
 					</div>
 				</CardContent>
 			</Card>
-		)
+		);
 	}
 
 	return (
 		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 			{admins.map((admin, index) => {
-				const isOriginalAdmin = admin.is_super // First admin is the original hardcoded one
+				const isOriginalAdmin = admin.is_super; // First admin is the original hardcoded one
 
 				return (
 					<Card key={admin.id} className="hover:shadow-md transition-shadow">
@@ -105,8 +105,8 @@ export function AdminsList({refreshTrigger}: AdminsListProps) {
 									)}
 									{admin.username}
 								</CardTitle>
-								<Badge variant={isOriginalAdmin ? "default" : "secondary"}>
-									{isOriginalAdmin ? "Главный" : "Админ"}
+								<Badge variant={isOriginalAdmin ? 'default' : 'secondary'}>
+									{isOriginalAdmin ? 'Главный' : 'Админ'}
 								</Badge>
 							</div>
 						</CardHeader>
@@ -135,8 +135,8 @@ export function AdminsList({refreshTrigger}: AdminsListProps) {
 							</div>
 						</CardContent>
 					</Card>
-				)
+				);
 			})}
 		</div>
-	)
+	);
 }

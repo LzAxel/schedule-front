@@ -1,12 +1,12 @@
-"use client"
+'use client';
 
-import {useEffect, useState} from "react"
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
-import {apiService, type Lesson} from "@/lib/api"
-import {useToast} from "@/hooks/use-toast"
-import {Edit, Trash2, Clock, MapPin, User, Calendar} from "lucide-react"
-import {DAY_NAMES} from "@/const/days";
-import {LessonItem} from "@/components/lesson/lesson-item";
+import {useEffect, useState} from 'react';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {apiService, type Lesson} from '@/lib/api';
+import {useToast} from '@/hooks/use-toast';
+import {Edit, Trash2, Clock, MapPin, User, Calendar} from 'lucide-react';
+import {DAY_NAMES} from '@/const/days';
+import {LessonItem} from '@/components/lesson/lesson-item';
 
 interface LessonsListProps {
 	onEdit: (lesson: Lesson) => void
@@ -21,54 +21,54 @@ export function LessonsList({onEdit, refreshTrigger}: LessonsListProps) {
 		Thursday: [],
 		Tuesday: [],
 		Wednesday: [],
-	})
-	const [isLoading, setIsLoading] = useState(true)
-	const {toast} = useToast()
+	});
+	const [isLoading, setIsLoading] = useState(true);
+	const {toast} = useToast();
 
 	const fetchLessons = async () => {
 		try {
-			setIsLoading(true)
-			const data = await apiService.getLessons()
+			setIsLoading(true);
+			const data = await apiService.getLessons();
 
 			const groupedPairs = Object.fromEntries((Object.keys(DAY_NAMES) as Array<keyof typeof DAY_NAMES>)
 				.map((day) => ([day, data
 					.filter((lesson) => lesson.day === day)
 					.sort((a, b) => a.pair_number - b.pair_number)]))) as Record<keyof typeof DAY_NAMES, Lesson[]>;
 
-			setLessons(groupedPairs)
+			setLessons(groupedPairs);
 		} catch (error) {
 			toast({
-				title: "Ошибка",
-				description: "Не удалось загрузить список занятий",
-				variant: "destructive",
-			})
+				title: 'Ошибка',
+				description: 'Не удалось загрузить список занятий',
+				variant: 'destructive',
+			});
 		} finally {
-			setIsLoading(false)
+			setIsLoading(false);
 		}
-	}
+	};
 
 	useEffect(() => {
-		fetchLessons()
-	}, [refreshTrigger, toast])
+		fetchLessons();
+	}, [refreshTrigger, toast]);
 
 	const handleDelete = async (id: number) => {
-		if (!confirm("Вы уверены, что хотите удалить это занятие?")) return
+		if (!confirm('Вы уверены, что хотите удалить это занятие?')) return;
 
 		try {
-			await apiService.deleteLesson(id)
+			await apiService.deleteLesson(id);
 			fetchLessons();
 			toast({
-				title: "Занятие удалено",
-				description: "Занятие успешно удалено из расписания",
-			})
+				title: 'Занятие удалено',
+				description: 'Занятие успешно удалено из расписания',
+			});
 		} catch (error) {
 			toast({
-				title: "Ошибка",
-				description: "Не удалось удалить занятие",
-				variant: "destructive",
-			})
+				title: 'Ошибка',
+				description: 'Не удалось удалить занятие',
+				variant: 'destructive',
+			});
 		}
-	}
+	};
 
 	if (isLoading) {
 		return (
@@ -87,7 +87,7 @@ export function LessonsList({onEdit, refreshTrigger}: LessonsListProps) {
 					</Card>
 				))}
 			</div>
-		)
+		);
 	}
 
 	return (
@@ -114,8 +114,8 @@ export function LessonsList({onEdit, refreshTrigger}: LessonsListProps) {
 								))
 						}
 					</CardContent>
-				</Card>
+				</Card>;
 			})}
 		</div>
-	)
+	);
 }

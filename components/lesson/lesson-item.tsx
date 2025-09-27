@@ -1,13 +1,13 @@
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {Calendar, Clock, Edit, MapPin, Trash2, User} from "lucide-react";
-import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
-import {Lesson} from "@/lib/api";
-import React from "react";
-import {DAY_NAMES} from "@/const/days";
-import {PAIR_TIMES} from "@/const/pairs";
-import {PARITY_LABELS} from "@/const/parity";
-import {ParityType} from "@/types/parity";
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {Calendar, Clock, Edit, MapPin, Trash2, User} from 'lucide-react';
+import {Badge} from '@/components/ui/badge';
+import {Button} from '@/components/ui/button';
+import {Lesson} from '@/lib/api';
+import React from 'react';
+import {DAY_NAMES} from '@/const/days';
+import {PAIR_TIMES} from '@/const/pairs';
+import {PARITY_LABELS} from '@/const/parity';
+import {ParityType} from '@/types/parity';
 
 interface Props {
 	lesson: Lesson;
@@ -46,7 +46,7 @@ export const LessonItem: React.FC<Props> = ({lesson, onEdit, onDelete, isEditabl
 				</div>
 
 				<div className="">
-					<Badge variant={(lesson.type === "static" || (lesson.type === currentParity)) ? "default" : "outline"}
+					<Badge variant={(lesson.type === 'static' || (lesson.type === currentParity)) ? 'default' : 'outline'}
 					       className="text-xs">
 						{PARITY_LABELS[lesson.type]}
 					</Badge>
@@ -73,5 +73,5 @@ export const LessonItem: React.FC<Props> = ({lesson, onEdit, onDelete, isEditabl
 			</CardContent>
 
 		</div>
-	</Card>
-}
+	</Card>;
+};

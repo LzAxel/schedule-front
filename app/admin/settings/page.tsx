@@ -1,11 +1,11 @@
-import { AuthGuard } from "@/components/auth/auth-guard"
-import { AdminLayout } from "@/components/admin/admin-layout"
-import { ParityToggle } from "@/components/admin/parity-toggle"
-import { SystemInfo } from "@/components/admin/system-info"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { Settings, ExternalLink, Eye, BookOpen } from "lucide-react"
+import { AuthGuard } from '@/components/auth/auth-guard';
+import { AdminLayout } from '@/components/admin/admin-layout';
+import { ParityToggle } from '@/components/admin/parity-toggle';
+import { SystemInfo } from '@/components/admin/system-info';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Settings, ExternalLink, Eye, BookOpen } from 'lucide-react';
 
 export default function SettingsPage() {
   return (
@@ -57,5 +57,5 @@ export default function SettingsPage() {
         </div>
       </AdminLayout>
     </AuthGuard>
-  )
+  );
 }

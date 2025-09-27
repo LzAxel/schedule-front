@@ -1,11 +1,11 @@
-import { AuthGuard } from "@/components/auth/auth-guard"
-import { AdminLayout } from "@/components/admin/admin-layout"
-import { DashboardStats } from "@/components/admin/dashboard-stats"
-import { RecentActivity } from "@/components/admin/recent-activity"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import Link from "next/link"
-import { Plus, Eye, Settings, Users } from "lucide-react"
+import { AuthGuard } from '@/components/auth/auth-guard';
+import { AdminLayout } from '@/components/admin/admin-layout';
+import { DashboardStats } from '@/components/admin/dashboard-stats';
+import { RecentActivity } from '@/components/admin/recent-activity';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
+import { Plus, Eye, Settings, Users } from 'lucide-react';
 
 export default function AdminDashboard() {
   return (
@@ -60,5 +60,5 @@ export default function AdminDashboard() {
         </div>
       </AdminLayout>
     </AuthGuard>
-  )
+  );
 }

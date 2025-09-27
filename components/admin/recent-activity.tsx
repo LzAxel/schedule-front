@@ -1,33 +1,33 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { apiService, type Lesson } from "@/lib/api"
-import { Clock, MapPin, User } from "lucide-react"
-import {DAY_NAMES} from "@/const/days";
+import { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { apiService, type Lesson } from '@/lib/api';
+import { Clock, MapPin, User } from 'lucide-react';
+import {DAY_NAMES} from '@/const/days';
 
 export function RecentActivity() {
-  const [recentLessons, setRecentLessons] = useState<Lesson[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [recentLessons, setRecentLessons] = useState<Lesson[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecentLessons = async () => {
       try {
-        setIsLoading(true)
-        const lessons = await apiService.getLessons()
+        setIsLoading(true);
+        const lessons = await apiService.getLessons();
         // Get the 5 most recent lessons (by ID)
-        const recent = lessons.sort((a, b) => (b.id || 0) - (a.id || 0)).slice(0, 5)
-        setRecentLessons(recent)
+        const recent = lessons.sort((a, b) => (b.id || 0) - (a.id || 0)).slice(0, 5);
+        setRecentLessons(recent);
       } catch (error) {
-        console.error("Error fetching recent lessons:", error)
+        console.error('Error fetching recent lessons:', error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchRecentLessons()
-  }, [])
+    fetchRecentLessons();
+  }, []);
 
   if (isLoading) {
     return (
@@ -49,7 +49,7 @@ export function RecentActivity() {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -94,5 +94,5 @@ export function RecentActivity() {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,13 +1,13 @@
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {Calendar, Clock, Edit, MapPin, Trash2, User} from "lucide-react";
-import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
-import {Lesson} from "@/lib/api";
-import React from "react";
-import {DAY_NAMES} from "@/const/days";
-import {PAIR_TIMES} from "@/const/pairs";
-import {PARITY_LABELS} from "@/const/parity";
-import {ParityType} from "@/types/parity";
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {Calendar, Clock, Edit, MapPin, Trash2, User} from 'lucide-react';
+import {Badge} from '@/components/ui/badge';
+import {Button} from '@/components/ui/button';
+import {Lesson} from '@/lib/api';
+import React from 'react';
+import {DAY_NAMES} from '@/const/days';
+import {PAIR_TIMES} from '@/const/pairs';
+import {PARITY_LABELS} from '@/const/parity';
+import {ParityType} from '@/types/parity';
 
 const CoupledLesson = ({lesson, currentParity}: { lesson: Lesson, currentParity?: ParityType }) => {
 	return <Card key={lesson.id}
@@ -34,7 +34,7 @@ const CoupledLesson = ({lesson, currentParity}: { lesson: Lesson, currentParity?
 
 				<div className="">
 					<Badge
-						variant={(lesson.type === "static" || (lesson.type === currentParity)) ? "default" : "outline"}
+						variant={(lesson.type === 'static' || (lesson.type === currentParity)) ? 'default' : 'outline'}
 						className="text-xs">
 						{PARITY_LABELS[lesson.type]}
 					</Badge>
@@ -42,7 +42,7 @@ const CoupledLesson = ({lesson, currentParity}: { lesson: Lesson, currentParity?
 			</CardContent>
 
 		</div>
-	</Card>
+	</Card>;
 
 };
 
@@ -81,5 +81,5 @@ export const CoupledLessonItem: React.FC<Props> = ({lessons, currentParity}) => 
 				}
 			</CardContent>
 		</div>
-	</Card>
-}
+	</Card>;
+};

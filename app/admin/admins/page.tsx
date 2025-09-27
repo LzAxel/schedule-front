@@ -1,26 +1,26 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { AuthGuard } from "@/components/auth/auth-guard"
-import { AdminLayout } from "@/components/admin/admin-layout"
-import { AdminForm } from "@/components/admin/admin-form"
-import { AdminsList } from "@/components/admin/admins-list"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, ArrowLeft, Shield, AlertTriangle } from "lucide-react"
+import { useState } from 'react';
+import { AuthGuard } from '@/components/auth/auth-guard';
+import { AdminLayout } from '@/components/admin/admin-layout';
+import { AdminForm } from '@/components/admin/admin-form';
+import { AdminsList } from '@/components/admin/admins-list';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Plus, ArrowLeft, Shield, AlertTriangle } from 'lucide-react';
 
 export default function AdminsPage() {
-  const [showForm, setShowForm] = useState(false)
-  const [refreshTrigger, setRefreshTrigger] = useState(0)
+  const [showForm, setShowForm] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleFormSuccess = () => {
-    setShowForm(false)
-    setRefreshTrigger((prev) => prev + 1)
-  }
+    setShowForm(false);
+    setRefreshTrigger((prev) => prev + 1);
+  };
 
   const handleFormCancel = () => {
-    setShowForm(false)
-  }
+    setShowForm(false);
+  };
 
   return (
     <AuthGuard>
@@ -82,5 +82,5 @@ export default function AdminsPage() {
         </div>
       </AdminLayout>
     </AuthGuard>
-  )
+  );
 }

@@ -1,15 +1,15 @@
-"use client"
+'use client';
 
-import type React from "react"
+import type React from 'react';
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { apiService } from "@/lib/api"
-import { useToast } from "@/hooks/use-toast"
-import { Eye, EyeOff } from "lucide-react"
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { apiService } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
+import { Eye, EyeOff } from 'lucide-react';
 
 interface AdminFormProps {
   onSuccess: () => void
@@ -18,58 +18,58 @@ interface AdminFormProps {
 
 export function AdminForm({ onSuccess, onCancel }: AdminFormProps) {
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
-  })
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
+    username: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
       toast({
-        title: "Ошибка",
-        description: "Пароли не совпадают",
-        variant: "destructive",
-      })
-      return
+        title: 'Ошибка',
+        description: 'Пароли не совпадают',
+        variant: 'destructive',
+      });
+      return;
     }
 
     if (formData.password.length < 4) {
       toast({
-        title: "Ошибка",
-        description: "Пароль должен содержать минимум 4 символа",
-        variant: "destructive",
-      })
-      return
+        title: 'Ошибка',
+        description: 'Пароль должен содержать минимум 4 символа',
+        variant: 'destructive',
+      });
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       await apiService.createAdmin({
         username: formData.username,
         password: formData.password,
-      })
+      });
       toast({
-        title: "Администратор создан",
-        description: "Новый администратор успешно добавлен",
-      })
-      onSuccess()
+        title: 'Администратор создан',
+        description: 'Новый администратор успешно добавлен',
+      });
+      onSuccess();
     } catch (error) {
       toast({
-        title: "Ошибка",
-        description: "Не удалось создать администратора. Возможно, такое имя пользователя уже существует.",
-        variant: "destructive",
-      })
+        title: 'Ошибка',
+        description: 'Не удалось создать администратора. Возможно, такое имя пользователя уже существует.',
+        variant: 'destructive',
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Card>
@@ -96,7 +96,7 @@ export function AdminForm({ onSuccess, onCancel }: AdminFormProps) {
             <div className="relative">
               <Input
                 id="password"
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 placeholder="Введите пароль"
@@ -122,7 +122,7 @@ export function AdminForm({ onSuccess, onCancel }: AdminFormProps) {
             <div className="relative">
               <Input
                 id="confirmPassword"
-                type={showConfirmPassword ? "text" : "password"}
+                type={showConfirmPassword ? 'text' : 'password'}
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 placeholder="Повторите пароль"
@@ -145,7 +145,7 @@ export function AdminForm({ onSuccess, onCancel }: AdminFormProps) {
 
           <div className="flex gap-3 pt-4">
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Создание..." : "Создать администратора"}
+              {isLoading ? 'Создание...' : 'Создать администратора'}
             </Button>
             <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
               Отмена
@@ -154,5 +154,5 @@ export function AdminForm({ onSuccess, onCancel }: AdminFormProps) {
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
