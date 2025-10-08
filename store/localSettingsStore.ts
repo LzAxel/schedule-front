@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export type SettingsDisplayType = 'all' | 'current' | 'even' | 'odd';
 
@@ -49,5 +49,5 @@ export const useLocalSettings = () => {
 		setSettings((prev) => ({ ...prev, display }));
 	};
 
-	return { settings, changeTheme, changeDisplay };
+	return [settings, changeTheme, changeDisplay] as const;
 };

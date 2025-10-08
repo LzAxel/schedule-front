@@ -15,6 +15,7 @@ import { filterNotHiddenLessons, isCurrentLessonDayEmpty } from '@/lib/lessons';
 import { LessonItem } from '@/components/lesson/lesson-item';
 import { CoupledLessonItem } from '@/components/lesson/copuled-lesson-item';
 import { SettingsMenu } from '@/components/settings/settings-menu';
+import { useLocalSettings } from '@/store/localSettingsStore';
 
 const DAYS = Object.keys(DAY_NAMES);
 
@@ -23,21 +24,10 @@ export function ScheduleGrid() {
 	const [settings, setSettings] = useState<Settings | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [hidePairs, setHidePairs] = useState(false);
 
-	const changeHidePairs = (value: boolean) => {
-		localStorage.setItem('hidePairs', JSON.stringify(value));
-		setHidePairs(value);
-	};
+	const [localSettings] = useLocalSettings();
 
 	useEffect(() => {
-		if (window) {
-			try {
-				const value = JSON.parse(localStorage.getItem('hidePairs')!!) ?? false;
-				setHidePairs(value);
-			} catch (e) {}
-		}
-
 		const fetchData = async () => {
 			try {
 				setIsLoading(true);
@@ -80,10 +70,10 @@ export function ScheduleGrid() {
 
 	const currentParity = isCurrentWeekEven(settings?.parity!) ? 'even' : 'odd';
 
+	console.log(localSettings);
 	return (
 		<div className="min-h-screen bg-muted/30">
 			<div className="w-full max-w-[2500px] mx-auto px-4 py-8">
-				<SettingsMenu />
 				<div className="text-center mb-8">
 					<h1 className="text-4xl font-bold text-balance mb-4">Расписание занятий</h1>
 					{settings && (
@@ -97,9 +87,8 @@ export function ScheduleGrid() {
 							</span>
 						</div>
 					)}
-					<div className="mx-auto flex flex-row items-center gap-2 bg-white rounded-lg border py-2 px-3 w-fit mt-4 shadow-sm">
-						<Switch checked={hidePairs} onCheckedChange={(value) => changeHidePairs(value)} />
-						<p>Скрывать лишние пары</p>
+					<div className="mx-auto mt-4">
+						<SettingsMenu />
 					</div>
 				</div>
 
@@ -112,8 +101,9 @@ export function ScheduleGrid() {
 								</CardTitle>
 							</CardHeader>
 							<CardContent className="space-y-3">
-								{schedule[day] && !isCurrentLessonDayEmpty(schedule[day], hidePairs, currentParity) ? (
-									filterNotHiddenLessons(schedule[day], hidePairs, currentParity)
+								{schedule[day] &&
+								!isCurrentLessonDayEmpty(schedule[day], localSettings.display, currentParity) ? (
+									filterNotHiddenLessons(schedule[day], localSettings.display, currentParity)
 										.reduce(
 											(prev, lesson) => {
 												if (!prev[lesson.pair_number - 1]) {

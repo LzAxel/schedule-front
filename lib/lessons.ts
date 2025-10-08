@@ -1,23 +1,31 @@
-import {Lesson} from '@/lib/api';
-import {ParityType} from '@/types/parity';
+import { Lesson } from '@/lib/api';
+import { ParityType } from '@/types/parity';
+import { SettingsDisplayType } from '@/store/localSettingsStore';
 
-
-export const filterNotHiddenLessons = (lessons: Lesson[], isHidePairs: boolean, currentParity: ParityType) => {
-	if (!isHidePairs) {
+export const filterNotHiddenLessons = (
+	lessons: Lesson[],
+	displayMode: SettingsDisplayType,
+	currentParity: ParityType,
+) => {
+	if (displayMode === 'all') {
 		return lessons;
 	}
 
-	return lessons.filter((lesson) => lesson.type === 'static' || lesson.type === currentParity);
+	if (displayMode === 'current') {
+		return lessons.filter((lesson) => lesson.type === 'static' || lesson.type === currentParity);
+	} else {
+		return lessons.filter((lesson) => lesson.type === 'static' || lesson.type === displayMode);
+	}
 };
 
-export const isCurrentLessonDayEmpty = (lessons: Lesson[], isHidePairs: boolean, currentParity: ParityType) => {
+export const isCurrentLessonDayEmpty = (
+	lessons: Lesson[],
+	displayMode: SettingsDisplayType,
+	currentParity: ParityType,
+) => {
 	if (lessons.length < 1) {
 		return true;
 	}
 
-	if (isHidePairs) {
-		return filterNotHiddenLessons(lessons, true, currentParity).length < 1;
-	}
-
-	return false;
+	return filterNotHiddenLessons(lessons, displayMode, currentParity).length < 1;
 };
