@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 export type SettingsDisplayType = 'all' | 'current' | 'even' | 'odd';
 
@@ -14,7 +14,16 @@ const DEFAULT_SETTINGS: LocalSettings = {
 
 const STORAGE_KEY = 'localSettings';
 
-export const useLocalSettings = () => {
+const LocalSettingsContext = createContext<
+	| {
+			settings: LocalSettings;
+			changeTheme: (isDarkTheme: boolean) => void;
+			changeDisplay: (display: SettingsDisplayType) => void;
+	  }
+	| undefined
+>(undefined);
+
+export const LocalSettingsProvider = ({ children }: { children: React.ReactNode }) => {
 	const [settings, setSettings] = useState<LocalSettings>(() => {
 		try {
 			const stored = localStorage.getItem(STORAGE_KEY);
@@ -49,5 +58,17 @@ export const useLocalSettings = () => {
 		setSettings((prev) => ({ ...prev, display }));
 	};
 
-	return [settings, changeTheme, changeDisplay] as const;
+	return (
+		<LocalSettingsContext.Provider value={{ settings, changeTheme, changeDisplay }}>
+			{children}
+		</LocalSettingsContext.Provider>
+	);
+};
+
+export const useLocalSettings = () => {
+	const context = useContext(LocalSettingsContext);
+	if (!context) {
+		throw new Error('useLocalSettings must be used within a LocalSettingsProvider');
+	}
+	return [context.settings, context.changeTheme, context.changeDisplay] as const;
 };

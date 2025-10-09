@@ -1,5 +1,11 @@
+'use client';
 import { ScheduleGrid } from '@/components/schedule/schedule-grid';
+import { LocalSettingsProvider } from '@/store/localSettingsStore';
 
 export default function SchedulePage() {
-  return <ScheduleGrid />;
+	return (
+		<LocalSettingsProvider>
+			<ScheduleGrid />
+		</LocalSettingsProvider>
+	);
 }

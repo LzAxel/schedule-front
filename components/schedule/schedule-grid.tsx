@@ -70,7 +70,6 @@ export function ScheduleGrid() {
 
 	const currentParity = isCurrentWeekEven(settings?.parity!) ? 'even' : 'odd';
 
-	console.log(localSettings);
 	return (
 		<div className="min-h-screen bg-muted/30">
 			<div className="w-full max-w-[2500px] mx-auto px-4 py-8">
@@ -82,7 +81,7 @@ export function ScheduleGrid() {
 							<span className="text-lg text-muted-foreground">
 								Текущая неделя:{' '}
 								<span className="font-semibold text-primary">
-									{isCurrentWeekEven(settings.parity) ? 'четная' : 'нечетная'}
+									{isCurrentWeekEven(settings.parity) ? 'нечётная' : 'чётная'}
 								</span>
 							</span>
 						</div>

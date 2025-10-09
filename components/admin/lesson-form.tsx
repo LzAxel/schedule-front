@@ -2,39 +2,40 @@
 
 import type React from 'react';
 
-import {useState} from 'react';
-import {Button} from '@/components/ui/button';
-import {Input} from '@/components/ui/input';
-import {Label} from '@/components/ui/label';
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import {apiService, type Lesson} from '@/lib/api';
-import {useToast} from '@/hooks/use-toast';
-import {MAX_PAIRS_COUNT} from '@/const/pairs';
-import {PARITY_LABELS} from '@/const/parity';
+import { useState } from 'react';
+import { AppButton } from '@/components/ui/appButton';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { apiService, type Lesson } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
+import { MAX_PAIRS_COUNT } from '@/const/pairs';
+import { PARITY_LABELS } from '@/const/parity';
 
 interface LessonFormProps {
-	lesson?: Lesson
-	onSuccess: () => void
-	onCancel: () => void
+	lesson?: Lesson;
+	onSuccess: () => void;
+	onCancel: () => void;
 }
 
 const DAYS = [
-	{value: 'Monday', label: 'Понедельник'},
-	{value: 'Tuesday', label: 'Вторник'},
-	{value: 'Wednesday', label: 'Среда'},
-	{value: 'Thursday', label: 'Четверг'},
-	{value: 'Friday', label: 'Пятница'},
-	{value: 'Saturday', label: 'Суббота'},
+	{ value: 'Monday', label: 'Понедельник' },
+	{ value: 'Tuesday', label: 'Вторник' },
+	{ value: 'Wednesday', label: 'Среда' },
+	{ value: 'Thursday', label: 'Четверг' },
+	{ value: 'Friday', label: 'Пятница' },
+	{ value: 'Saturday', label: 'Суббота' },
 ];
 
 const PAIR_NUMBERS = new Array(MAX_PAIRS_COUNT).fill(0).map((_, index) => index + 1);
 
 const LESSON_TYPES = Object.entries(PARITY_LABELS).map((type) => ({
-	value: type[0], label: type[1]
+	value: type[0],
+	label: type[1],
 }));
 
-export function LessonForm({lesson, onSuccess, onCancel}: LessonFormProps) {
+export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 	const [formData, setFormData] = useState({
 		name: lesson?.name || '',
 		teacher: lesson?.teacher || '',
@@ -44,7 +45,7 @@ export function LessonForm({lesson, onSuccess, onCancel}: LessonFormProps) {
 		day: lesson?.day || 'Monday',
 	});
 	const [isLoading, setIsLoading] = useState(false);
-	const {toast} = useToast();
+	const { toast } = useToast();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -89,7 +90,7 @@ export function LessonForm({lesson, onSuccess, onCancel}: LessonFormProps) {
 							<Input
 								id="name"
 								value={formData.name}
-								onChange={(e) => setFormData({...formData, name: e.target.value})}
+								onChange={(e) => setFormData({ ...formData, name: e.target.value })}
 								placeholder="Например: Математика"
 								required
 								disabled={isLoading}
@@ -101,7 +102,7 @@ export function LessonForm({lesson, onSuccess, onCancel}: LessonFormProps) {
 							<Input
 								id="teacher"
 								value={formData.teacher}
-								onChange={(e) => setFormData({...formData, teacher: e.target.value})}
+								onChange={(e) => setFormData({ ...formData, teacher: e.target.value })}
 								placeholder="Например: Иванов И.И."
 								required
 								disabled={isLoading}
@@ -112,11 +113,11 @@ export function LessonForm({lesson, onSuccess, onCancel}: LessonFormProps) {
 							<Label htmlFor="day">День недели</Label>
 							<Select
 								value={formData.day}
-								onValueChange={(value) => setFormData({...formData, day: value})}
+								onValueChange={(value) => setFormData({ ...formData, day: value })}
 								disabled={isLoading}
 							>
 								<SelectTrigger>
-									<SelectValue placeholder="Выберите день"/>
+									<SelectValue placeholder="Выберите день" />
 								</SelectTrigger>
 								<SelectContent>
 									{DAYS.map((day) => (
@@ -132,14 +133,16 @@ export function LessonForm({lesson, onSuccess, onCancel}: LessonFormProps) {
 							<Label htmlFor="pair_number">Номер пары</Label>
 							<Select
 								value={formData.pair_number.toString()}
-								onValueChange={(value) => setFormData({
-									...formData,
-									pair_number: Number.parseInt(value)
-								})}
+								onValueChange={(value) =>
+									setFormData({
+										...formData,
+										pair_number: Number.parseInt(value),
+									})
+								}
 								disabled={isLoading}
 							>
 								<SelectTrigger>
-									<SelectValue placeholder="Выберите пару"/>
+									<SelectValue placeholder="Выберите пару" />
 								</SelectTrigger>
 								<SelectContent>
 									{PAIR_NUMBERS.map((num) => (
@@ -156,7 +159,7 @@ export function LessonForm({lesson, onSuccess, onCancel}: LessonFormProps) {
 							<Input
 								id="location"
 								value={formData.location}
-								onChange={(e) => setFormData({...formData, location: e.target.value})}
+								onChange={(e) => setFormData({ ...formData, location: e.target.value })}
 								placeholder="Например: Аудитория 101"
 								required
 								disabled={isLoading}
@@ -167,14 +170,16 @@ export function LessonForm({lesson, onSuccess, onCancel}: LessonFormProps) {
 							<Label htmlFor="type">Тип проведения</Label>
 							<Select
 								value={formData.type}
-								onValueChange={(value) => setFormData({
-									...formData,
-									type: value as 'static' | 'even' | 'odd'
-								})}
+								onValueChange={(value) =>
+									setFormData({
+										...formData,
+										type: value as 'static' | 'even' | 'odd',
+									})
+								}
 								disabled={isLoading}
 							>
 								<SelectTrigger>
-									<SelectValue placeholder="Выберите тип"/>
+									<SelectValue placeholder="Выберите тип" />
 								</SelectTrigger>
 								<SelectContent>
 									{LESSON_TYPES.map((type) => (
@@ -188,12 +193,12 @@ export function LessonForm({lesson, onSuccess, onCancel}: LessonFormProps) {
 					</div>
 
 					<div className="flex gap-3 pt-4">
-						<Button type="submit" disabled={isLoading}>
+						<AppButton type="submit" disabled={isLoading}>
 							{isLoading ? 'Сохранение...' : lesson ? 'Обновить' : 'Создать'}
-						</Button>
-						<Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
+						</AppButton>
+						<AppButton type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
 							Отмена
-						</Button>
+						</AppButton>
 					</div>
 				</form>
 			</CardContent>
