@@ -1,8 +1,6 @@
 import type React from 'react';
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
 import { Analytics } from '@vercel/analytics/next';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
@@ -18,7 +16,13 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+			<link rel="preconnect" href="https://fonts.googleapis.com" />
+			<link rel="preconnect" href="https://fonts.gstatic.com" />
+			<link
+				href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+				rel="stylesheet"
+			/>
+			<body>
 				<Suspense fallback={null}>
 					{children}
 					<Toaster />
