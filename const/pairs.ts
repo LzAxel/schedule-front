@@ -6,6 +6,7 @@ export const PAIR_TIMES = {
 	5: '14:45 - 16:15',
 	6: '16:30 - 18:00',
 	7: '18:10 - 19:40',
+	8: '19:50 - 21:20',
 };
 
-export const MAX_PAIRS_COUNT = 7;
+export const MAX_PAIRS_COUNT = 8;

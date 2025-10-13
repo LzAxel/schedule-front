@@ -1,22 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { apiService, Lesson, type Schedule, type Settings } from '@/lib/api';
-import { Clock, MapPin, User, Calendar, LucideUser, LucideMapPin } from 'lucide-react';
+import { apiService, type Schedule, type Settings } from '@/lib/api';
 import { isCurrentWeekEven } from '@/lib/parity';
-import { Toggle } from '@/components/ui/toggle';
-import { Switch } from '@/components/ui/switch';
 import { DAY_NAMES } from '@/const/days';
-import { MAX_PAIRS_COUNT, PAIR_TIMES } from '@/const/pairs';
-import { PARITY_LABELS } from '@/const/parity';
-import { filterNotHiddenLessons, isCurrentLessonDayEmpty } from '@/lib/lessons';
-import { LessonItem } from '@/components/lesson/lesson-item';
-import { CoupledLessonItem } from '@/components/lesson/copuled-lesson-item';
-import { SettingsMenu } from '@/components/settings/settings-menu';
 import { useLocalSettings } from '@/store/localSettingsStore';
 import { ScheduleTable } from '@/modules/schedule/ScheduleTable';
+import { WeekStatus } from '@/modules/schedule/WeekStatus';
 
 const DAYS = Object.keys(DAY_NAMES);
 
@@ -59,9 +49,32 @@ export function ScheduleGrid() {
 
 	const currentParity = isCurrentWeekEven(settings?.parity!) ? 'even' : 'odd';
 
+	function getCurrentWeekRange(): { start: Date; end: Date } {
+		const today = new Date();
+		const dayOfWeek = today.getDay(); // 0 (вс) - 6 (сб)
+		const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Смещение до понедельника
+
+		const start = new Date(today);
+		start.setDate(today.getDate() - diffToMonday);
+		start.setHours(0, 0, 0, 0); // Начало дня
+
+		const end = new Date(start);
+		end.setDate(start.getDate() + 6);
+		end.setHours(23, 59, 59, 999); // Конец дня
+
+		return { start, end };
+	}
+
+	const currentWeekRange = getCurrentWeekRange();
+
 	return (
-		<div className="min-h-screen bg-background-dark p-5">
-			<ScheduleTable />
+		<div className="min-h-screen bg-background-dark p-5 flex flex-col gap-[24px]">
+			<WeekStatus
+				isEven={isCurrentWeekEven(settings?.parity!)}
+				weekEndDate={currentWeekRange.end}
+				weekStartDate={currentWeekRange.start}
+			/>
+			<ScheduleTable schedule={schedule} />
 		</div>
 	);
 }
