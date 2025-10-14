@@ -34,3 +34,8 @@ export const isCurrentWeekEven = (paritySetting: 'even' | 'odd') => {
 	const weekNumber = getAcademicWeekNumber(new Date());
 	return paritySetting === 'even' ? weekNumber % 2 === 0 : weekNumber % 2 !== 0;
 };
+
+export const getCurrentWeekParity = (paritySetting: 'even' | 'odd') => {
+	const weekNumber = getAcademicWeekNumber(new Date());
+	return paritySetting === 'even' ? ((weekNumber % 2 === 0) ? 'even' : 'odd') : ((weekNumber % 2 !== 0) ? 'even' : 'odd');
+};

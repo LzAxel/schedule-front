@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-export type SettingsDisplayType = 'current' | 'even' | 'odd';
+export type SettingsDisplayType = 'all' | 'current' | 'even' | 'odd';
 
 interface LocalSettings {
 	isDarkTheme: boolean;
@@ -29,7 +29,7 @@ export const LocalSettingsProvider = ({ children }: { children: React.ReactNode 
 			const stored = localStorage.getItem(STORAGE_KEY);
 			if (stored) {
 				const parsed = JSON.parse(stored);
-				if (typeof parsed.isDarkTheme === 'boolean' && ['current', 'even', 'odd'].includes(parsed.display)) {
+				if (typeof parsed.isDarkTheme === 'boolean' && ['all', 'current', 'even', 'odd'].includes(parsed.display)) {
 					return parsed as LocalSettings;
 				}
 			}

@@ -1,19 +1,25 @@
 import {PAIR_TIMES} from "@/const/pairs";
 import {LucideMapPin, LucideUser} from "lucide-react";
+import {ParityType} from "@/types/parity";
+import {clsx} from "clsx";
 
 interface Props {
     title: string;
     teacher: string;
     place: string;
     pairNumber: number;
+    parity?: ParityType;
 }
 
 export const ScheduleTableMobileItem = (props: Props) => {
     return <div className="flex flex-row gap-[8px] not-last:border-b border-b-background-light">
         <div className="flex w-[15px] text-sm items-center justify-center shrink-0"><p>{props.pairNumber}</p></div>
         <div className="flex flex-col gap-[8px] pb-[8px] grow">
-            <div className="flex flex-row gap-[10px] justify-between items-center">
-                <p className="text-sm line-clamp-2">{props.title}</p>
+            <div className="flex flex-row gap-[10px] justify-between items-start">
+                <p className={clsx("text-sm line-clamp-2", {
+                    "text-primary": props.parity === 'even',
+                    "text-secondary": props.parity === 'odd'
+                })}>{props.title}</p>
                 <p className="whitespace-nowrap hidden xs:block text-xs text-text-muted">{PAIR_TIMES[props.pairNumber as keyof typeof PAIR_TIMES]}</p>
                 <div className="xs:hidden flex text-right flex-col gap-[3px] text-sm text-text-muted">
                     <p className="text-xs text-text-muted">{PAIR_TIMES[props.pairNumber as keyof typeof PAIR_TIMES].split(" - ")[0]}</p>
