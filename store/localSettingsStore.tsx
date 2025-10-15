@@ -23,13 +23,27 @@ const LocalSettingsContext = createContext<
 	| undefined
 >(undefined);
 
+const toggleDarkTheme = (isDark: boolean) => {
+	if (isDark) {
+		document.querySelector('body')!.classList.add('dark');
+	} else {
+		document.querySelector('body')!.classList.remove('dark');
+	}
+};
+
 export const LocalSettingsProvider = ({ children }: { children: React.ReactNode }) => {
 	const [settings, setSettings] = useState<LocalSettings>(() => {
 		try {
 			const stored = localStorage.getItem(STORAGE_KEY);
 			if (stored) {
 				const parsed = JSON.parse(stored);
-				if (typeof parsed.isDarkTheme === 'boolean' && ['all', 'current', 'even', 'odd'].includes(parsed.display)) {
+				if (
+					typeof parsed.isDarkTheme === 'boolean' &&
+					['all', 'current', 'even', 'odd'].includes(parsed.display)
+				) {
+					if (document) {
+						toggleDarkTheme(parsed.isDarkTheme);
+					}
 					return parsed as LocalSettings;
 				}
 			}
@@ -42,6 +56,7 @@ export const LocalSettingsProvider = ({ children }: { children: React.ReactNode 
 	useEffect(() => {
 		try {
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+			toggleDarkTheme(settings.isDarkTheme);
 		} catch (error) {
 			console.error('Error writing to localStorage:', error);
 		}
