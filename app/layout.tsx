@@ -4,10 +4,13 @@ import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
+import { Inter } from 'next/font/google';
 
 export const metadata: Metadata = {
 	title: 'Расписание Уника',
 };
+
+const inter = Inter({ subsets: ['cyrillic-ext', 'latin-ext'] });
 
 export default function RootLayout({
 	children,
@@ -15,13 +18,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<link rel="preconnect" href="https://fonts.googleapis.com" />
-			<link rel="preconnect" href="https://fonts.gstatic.com" />
-			<link
-				href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-				rel="stylesheet"
-			/>
+		<html lang="en" className={inter.className}>
 			<body className="">
 				<Suspense fallback={null}>
 					{children}

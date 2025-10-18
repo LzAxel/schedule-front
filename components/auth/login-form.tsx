@@ -43,7 +43,7 @@ export function LoginForm() {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-muted/50 p-4">
+		<div className="min-h-screen bg-background-dark p-5 flex flex-col items-center justify-center gap-[24px]">
 			<Card className="w-full max-w-md">
 				<CardHeader className="text-center">
 					<CardTitle className="text-2xl font-bold">Вход в систему</CardTitle>
@@ -73,7 +73,7 @@ export function LoginForm() {
 								disabled={isLoading}
 							/>
 						</div>
-						<AppButton type="submit" className="w-full" disabled={isLoading}>
+						<AppButton type="submit" className="w-full text-text bg-primary" disabled={isLoading}>
 							{isLoading ? 'Вход...' : 'Войти'}
 						</AppButton>
 					</form>

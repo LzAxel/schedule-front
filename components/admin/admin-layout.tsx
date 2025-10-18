@@ -51,18 +51,18 @@ export function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 			{/* Sidebar */}
 			<div
 				className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-background border-r transform transition-transform duration-200 ease-in-out
+        fixed inset-y-0 left-0 z-40 w-64 bg-background border-r border-border transform transition-transform duration-200 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 lg:inset-0
       `}
 			>
 				<div className="flex flex-col h-full">
-					<div className="p-6 border-b">
+					<div className="p-6 border-b border-border">
 						<h1 className="text-xl font-bold text-primary">Админ панель</h1>
 						<p className="text-sm text-muted-foreground mt-1">Система управления расписанием</p>
 					</div>
 
-					<nav className="flex-1 p-4 space-y-2">
+					<nav className="flex-1 p-4 space-y-3">
 						{navigation.map((item) => {
 							const Icon = item.icon;
 							const isActive = activeTab === item.id;
@@ -71,7 +71,7 @@ export function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 								<AppButton
 									key={item.id}
 									variant={isActive ? 'default' : 'ghost'}
-									className="w-full justify-start"
+									className="py-4 w-full justify-start cursor-pointer bg-background-light hover:bg-background border-border border shadow-sm"
 									onClick={() => handleNavigation(item.href)}
 								>
 									<Icon className="h-4 w-4 mr-3" />
@@ -81,10 +81,10 @@ export function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 						})}
 					</nav>
 
-					<div className="p-4 border-t">
+					<div className="p-4 border-t border-border">
 						<AppButton
 							variant="outline"
-							className="w-full justify-start text-destructive hover:text-destructive bg-transparent"
+							className="w-full justify-start border-border bg-background-light shadow-sm text-danger hover:border-danger cursor-pointer"
 							onClick={handleLogout}
 						>
 							<LogOut className="h-4 w-4 mr-3" />

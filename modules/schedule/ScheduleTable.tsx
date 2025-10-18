@@ -72,7 +72,7 @@ export const ScheduleTable: FC<Props> = ({ schedule, weekStartDate, mode }) => {
 								});
 
 								if (pairs.length === 0) {
-									return <ScheduleTableItemEmpty />;
+									return <ScheduleTableItemEmpty key={`${index}-${weekday}`} />;
 								}
 
 								if (mode === 'all') {
@@ -93,7 +93,10 @@ export const ScheduleTable: FC<Props> = ({ schedule, weekStartDate, mode }) => {
 									}
 
 									return (
-										<div className="grid grid-cols-1 grid-rows-2 gap-[8px]">
+										<div
+											key={`${index}-${weekday}`}
+											className="grid grid-cols-1 grid-rows-2 gap-[8px]"
+										>
 											{odd ? (
 												<ScheduleTableItem
 													key={odd.id}
