@@ -8,14 +8,7 @@ import globals from 'globals';
 
 export default defineConfig([
 	{
-		ignores: [
-			'.next/**',
-			'public/**',
-			'next.config.js',
-			'postcss.config.js',
-			'.prettierrc.js',
-			'eslint.config.mts',
-		],
+		ignores: ['.next/**', 'public/**', 'postcss.config.js', '.prettierrc.js', 'eslint.config.mts'],
 	},
 	{
 		...js.configs.recommended,
