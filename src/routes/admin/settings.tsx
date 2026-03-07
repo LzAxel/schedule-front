@@ -1,80 +1,49 @@
-import { AuthGuard } from '@/components/auth/auth-guard';
-import { AdminLayout } from '@/components/admin/admin-layout';
 import { ParityToggle } from '@/components/admin/parity-toggle';
 import { SystemInfo } from '@/components/admin/system-info';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppButton } from '@/components/ui/appButton';
-// import Link from 'next/link';
-// import { BookOpen, ExternalLink, Eye, Settings } from 'lucide-react';
 import { createFileRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
+import { Eye, BookOpen, LayoutDashboard } from 'lucide-react';
 
 export const Route = createFileRoute('/admin/settings')({
 	component: SettingsPage,
 });
 
 function SettingsPage() {
+	const navigate = useNavigate();
+
 	return (
-		<AuthGuard>
-			<AdminLayout activeTab="settings">
-				<div className="space-y-8">
-					<div>
-						<h1 className="text-3xl font-bold text-balance">Настройки системы</h1>
-						<p className="text-muted-foreground mt-2">
-							Управление параметрами и конфигурацией системы расписания
-						</p>
-					</div>
+		<div className="space-y-6">
+			<h1 className="text-2xl font-bold text-text">Настройки системы</h1>
 
-					<div className="grid gap-6 lg:grid-cols-2">
-						<div className="space-y-6">
-							<ParityToggle />
+			<div className="grid gap-6 lg:grid-cols-2">
+				<div className="space-y-6">
+					<ParityToggle />
 
-							<Card>
-								<CardHeader>
-									<div className="flex items-center gap-2">
-										{/*<ExternalLink className="h-5 w-5 text-primary" />*/}
-										<CardTitle>Быстрые ссылки</CardTitle>
-									</div>
-									<CardDescription>Полезные ссылки для управления системой</CardDescription>
-								</CardHeader>
-								<CardContent className="space-y-3">
-									<AppButton
-										asChild
-										variant='outline'
-										className="w-full justify-start bg-transparent"
-									>
-										{/*<Link href='/schedule'>*/}
-										{/*	<Eye className="h-4 w-4 mr-2" />*/}
-										{/*	Просмотреть публичное расписание*/}
-										{/*</Link>*/}
-									</AppButton>
-									<AppButton
-										asChild
-										variant='outline'
-										className="w-full justify-start bg-transparent"
-									>
-										{/*<Link href="/admin/lessons">*/}
-										{/*	<BookOpen className="h-4 w-4 mr-2" />*/}
-										{/*	Управление занятиями*/}
-										{/*</Link>*/}
-									</AppButton>
-									<AppButton
-										asChild
-										variant='outline'
-										className="w-full justify-start bg-transparent"
-									>
-										{/*<Link href='/admin'>*/}
-										{/*	<Settings className="h-4 w-4 mr-2" />*/}
-										{/*	Главная панель*/}
-										{/*</Link>*/}
-									</AppButton>
-								</CardContent>
-							</Card>
-						</div>
-
-						<SystemInfo />
-					</div>
+					<Card>
+						<CardHeader>
+							<CardTitle>Быстрые ссылки</CardTitle>
+						</CardHeader>
+						<CardContent className="space-y-3">
+							<AppButton variant="outline" className="w-full justify-start" onClick={() => navigate({ to: '/schedule' })}>
+								<Eye className="h-4 w-4 mr-2" />
+								Публичное расписание
+							</AppButton>
+							<AppButton variant="outline" className="w-full justify-start" onClick={() => navigate({ to: '/admin/lessons' })}>
+								<BookOpen className="h-4 w-4 mr-2" />
+								Управление занятиями
+							</AppButton>
+							<AppButton variant="outline" className="w-full justify-start" onClick={() => navigate({ to: '/admin' })}>
+								<LayoutDashboard className="h-4 w-4 mr-2" />
+								Панель управления
+							</AppButton>
+						</CardContent>
+					</Card>
 				</div>
-			</AdminLayout>
-		</AuthGuard>
-	)
+
+				<SystemInfo />
+			</div>
+		</div>
+	);
 }

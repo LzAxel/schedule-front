@@ -1,3 +1,4 @@
+import { AuthGuard } from '@/components/auth/auth-guard';
 import { AdminLayout } from '@/components/admin/admin-layout';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 
@@ -7,8 +8,10 @@ export const Route = createFileRoute('/admin')({
 
 function AdminDashboard() {
 	return (
-		<AdminLayout activeTab="dashboard">
-			<Outlet />
-		</AdminLayout>
+		<AuthGuard>
+			<AdminLayout activeTab="dashboard">
+				<Outlet />
+			</AdminLayout>
+		</AuthGuard>
 	);
 }

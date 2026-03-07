@@ -3,7 +3,7 @@
 import type React from 'react';
 
 import { useEffect, useState } from 'react';
-// import { useRouter } from 'next/navigation';
+import { useNavigate } from '@tanstack/react-router';
 import { AuthService } from '@/lib/auth';
 
 interface AuthGuardProps {
@@ -12,20 +12,20 @@ interface AuthGuardProps {
 
 export function AuthGuard({ children }: AuthGuardProps) {
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-	// const router = useRouter();
+	const navigate = useNavigate();
 
-	// useEffect(() => {
-	// 	const checkAuth = () => {
-	// 		const authenticated = AuthService.isAuthenticated();
-	// 		setIsAuthenticated(authenticated);
-	//
-	// 		if (!authenticated) {
-	// 			router.push('/login');
-	// 		}
-	// 	};
-	//
-	// 	checkAuth();
-	// }, [router]);
+	useEffect(() => {
+		const checkAuth = () => {
+			const authenticated = AuthService.isAuthenticated();
+			setIsAuthenticated(authenticated);
+
+			if (!authenticated) {
+				navigate({ to: '/login' });
+			}
+		};
+
+		checkAuth();
+	}, [navigate]);
 
 	if (isAuthenticated === null) {
 		return (

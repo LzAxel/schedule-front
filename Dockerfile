@@ -8,19 +8,14 @@ RUN npm ci
 
 COPY . .
 
-RUN echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" > .env
+FROM base AS builder
 
 RUN npm run build
 
-FROM node:18-alpine AS production
+FROM nginx:alpine AS production
 
-WORKDIR /app
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-COPY --from=base /src/routes/.next ./.next
-COPY --from=base /src/routes/node_modules ./node_modules
-COPY --from=base /src/routes/package.json ./package.json
-COPY --from=base /src/routes/public ./public
+EXPOSE 80
 
-EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD ["nginx", "-g", "daemon off;"]

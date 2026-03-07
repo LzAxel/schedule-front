@@ -15,6 +15,7 @@ export function LoginForm() {
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	// const navigate = useNavigate();
+	const navigate = useNavigate();
 	const { toast } = useToast();
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -28,6 +29,7 @@ export function LoginForm() {
 				description: 'Добро пожаловать в админ панель!',
 			});
 			// navigate('/admin');
+			navigate({ to: '/admin' });
 		} catch (error) {
 			toast({
 				title: 'Ошибка входа',

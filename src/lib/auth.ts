@@ -11,7 +11,7 @@ export interface AuthResponse {
 	token: string;
 }
 
-const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api`;
+const API_BASE_URL = import.meta.env.VITE_API_URL + '/api';
 
 export class AuthService {
 	private static TOKEN_KEY = 'auth_token';
