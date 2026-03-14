@@ -26,6 +26,23 @@ export interface Schedule {
 	[day: string]: Lesson[];
 }
 
+export interface Teacher {
+	id: number;
+	name: string;
+}
+
+export interface Subject {
+	id: number;
+	name: string;
+}
+
+export interface Location {
+	id: number;
+	building: string;
+	room: string;
+	full_name: string;
+}
+
 class ApiService {
 	private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
 		const url = `${API_BASE_URL}${endpoint}`;
@@ -102,6 +119,52 @@ class ApiService {
 		return this.request<Settings>('/parity', {
 			method: 'PUT',
 		});
+	}
+
+	// Reference entities
+	async getTeachers(): Promise<Teacher[]> {
+		return this.request<Teacher[]>('/teachers');
+	}
+
+	async createTeacher(name: string): Promise<Teacher> {
+		return this.request<Teacher>('/teachers', {
+			method: 'POST',
+			body: JSON.stringify({ name }),
+		});
+	}
+
+	async deleteTeacher(id: number): Promise<void> {
+		await this.request(`/teachers/${id}`, { method: 'DELETE' });
+	}
+
+	async getSubjects(): Promise<Subject[]> {
+		return this.request<Subject[]>('/subjects');
+	}
+
+	async createSubject(name: string): Promise<Subject> {
+		return this.request<Subject>('/subjects', {
+			method: 'POST',
+			body: JSON.stringify({ name }),
+		});
+	}
+
+	async deleteSubject(id: number): Promise<void> {
+		await this.request(`/subjects/${id}`, { method: 'DELETE' });
+	}
+
+	async getLocations(): Promise<Location[]> {
+		return this.request<Location[]>('/locations');
+	}
+
+	async createLocation(building: string, room: string): Promise<Location> {
+		return this.request<Location>('/locations', {
+			method: 'POST',
+			body: JSON.stringify({ building, room }),
+		});
+	}
+
+	async deleteLocation(id: number): Promise<void> {
+		await this.request(`/locations/${id}`, { method: 'DELETE' });
 	}
 }
 

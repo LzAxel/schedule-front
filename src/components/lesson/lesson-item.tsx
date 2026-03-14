@@ -1,10 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, Clock, Edit, MapPin, Trash2, User } from 'lucide-react';
+import { Calendar, Clock, Edit, MapPin, Trash2, User, Copy } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { AppButton } from '@/components/ui/appButton';
 import { Lesson } from '@/lib/api';
 import React from 'react';
-import { DAY_NAMES } from '@/const/days';
 import { PAIR_TIMES } from '@/const/pairs';
 import { PARITY_LABELS } from '@/const/parity';
 import { ParityType } from '@/types/parity';
@@ -13,11 +11,12 @@ interface Props {
 	lesson: Lesson;
 	onEdit?: () => void;
 	onDelete?: () => void;
+	onDuplicate?: () => void;
 	isEditable?: boolean;
 	currentParity?: ParityType;
 }
 
-export const LessonItem: React.FC<Props> = ({ lesson, onEdit, onDelete, isEditable, currentParity }) => {
+export const LessonItem: React.FC<Props> = ({ lesson, onEdit, onDelete, onDuplicate, isEditable, currentParity }) => {
 	return (
 		<Card key={lesson.id} className="flex flex-row p-0 hover:shadow-md transition-shadow gap-0 overflow-hidden">
 			<div className="w-6 text-xl bg-accent opacity-80 text-white rounded-l flex items-center justify-center shrink-0">
@@ -58,18 +57,27 @@ export const LessonItem: React.FC<Props> = ({ lesson, onEdit, onDelete, isEditab
 
 					{isEditable && (
 						<div className="flex gap-2">
-							<AppButton size="sm" variant="outline" onClick={() => onEdit?.()} className="flex-1">
-								<Edit className="h-4 w-4 mr-1" />
+							<button
+								onClick={() => onEdit?.()}
+								className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 rounded-md bg-background-light text-text-muted text-sm shadow-sm hover:bg-background transition-colors"
+							>
+								<Edit className="h-4 w-4" />
 								Изменить
-							</AppButton>
-							<AppButton
-								size="sm"
-								variant="outline"
+							</button>
+							<button
+								onClick={() => onDuplicate?.()}
+								className="flex items-center justify-center px-2 py-1.5 rounded-md bg-background-light text-text-muted text-sm shadow-sm hover:bg-background transition-colors"
+								title="Дублировать"
+							>
+								<Copy className="h-4 w-4" />
+							</button>
+							<button
 								onClick={() => onDelete?.()}
-								className="hover:bg-destructive text-destructive hover:text-white bg-transparent"
+								className="flex items-center justify-center px-2 py-1.5 rounded-md bg-background-light text-danger text-sm shadow-sm hover:bg-destructive/10 transition-colors"
+								title="Удалить"
 							>
 								<Trash2 className="h-4 w-4" />
-							</AppButton>
+							</button>
 						</div>
 					)}
 				</CardContent>

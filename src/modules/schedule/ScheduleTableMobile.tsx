@@ -25,7 +25,7 @@ export const ScheduleTableMobile = ({ schedule, weekStartDate, mode }: Props) =>
 					>
 						<p className="text-xs text-text-muted">{`${weekdayName}, ${formatDateToDayMonth(weekStartDate, index)}`}</p>
 						<div className="flex flex-col gap-[6px]">
-							{schedule[weekday].length > 1 ? (
+							{schedule[weekday]?.length > 0 ? (
 								schedule[weekday].map((pair) => (
 									<ScheduleTableMobileItem
 										key={`${weekday}-${pair.id}`}

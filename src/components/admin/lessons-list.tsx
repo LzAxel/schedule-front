@@ -10,10 +10,11 @@ import { LessonItem } from '@/components/lesson/lesson-item';
 
 interface LessonsListProps {
 	onEdit: (lesson: Lesson) => void;
+	onDuplicate: (lesson: Lesson) => void;
 	refreshTrigger: number;
 }
 
-export function LessonsList({ onEdit, refreshTrigger }: LessonsListProps) {
+export function LessonsList({ onEdit, onDuplicate, refreshTrigger }: LessonsListProps) {
 	const [lessons, setLessons] = useState<Record<keyof typeof DAY_NAMES, Lesson[]>>({
 		Monday: [],
 		Friday: [],
@@ -116,6 +117,7 @@ export function LessonsList({ onEdit, refreshTrigger }: LessonsListProps) {
 										lesson={lesson}
 										onDelete={() => handleDelete(lesson.id!)}
 										onEdit={() => onEdit(lesson)}
+										onDuplicate={() => onDuplicate(lesson)}
 										isEditable={true}
 									/>
 								))

@@ -2,9 +2,8 @@
 
 import type React from 'react';
 
-import { useState } from 'react';
 import { useNavigate, useLocation } from '@tanstack/react-router';
-import { AppButton } from '@/components/ui/appButton';
+import { ThemeSwitcher } from '@/components/my-ui/ThemeSwitcher';
 import { AuthService } from '@/lib/auth';
 import { LogOut, Calendar, BookOpen, Users, Settings } from 'lucide-react';
 
@@ -39,6 +38,7 @@ export function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 		<div className="min-h-screen bg-background-dark p-5 flex flex-col gap-[24px]">
 			<div className="flex flex-col xl:flex-row gap-[12px] xl:items-center xl:justify-between">
 				<div className="flex items-center gap-[12px]">
+					<ThemeSwitcher />
 					<h1 className="text-2xl font-bold text-primary">Админ-панель</h1>
 				</div>
 				<div className="flex flex-wrap gap-[8px]">
@@ -46,21 +46,27 @@ export function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 						const Icon = item.icon;
 						const isActive = currentPath === item.href || (item.href === '/admin' && currentPath === '/admin');
 						return (
-							<AppButton
+							<button
 								key={item.id}
-								variant={isActive ? 'default' : 'outline'}
 								onClick={() => handleNavigation(item.href)}
-								className="gap-2"
+								className={`w-fit flex items-center gap-[8px] p-[8px] rounded-md shadow-sm text-sm transition-colors ${
+									isActive
+										? 'bg-primary text-primary-foreground'
+										: 'bg-background-light text-text-muted hover:bg-background'
+								}`}
 							>
 								<Icon className="h-4 w-4" />
 								{item.label}
-							</AppButton>
+							</button>
 						);
 					})}
-					<AppButton variant="outline" onClick={handleLogout} className="gap-2 text-danger hover:text-danger">
+					<button
+						onClick={handleLogout}
+						className="w-fit flex items-center gap-[8px] p-[8px] rounded-md shadow-sm bg-background-light text-danger hover:bg-background text-sm"
+					>
 						<LogOut className="h-4 w-4" />
 						Выйти
-					</AppButton>
+					</button>
 				</div>
 			</div>
 			{children}

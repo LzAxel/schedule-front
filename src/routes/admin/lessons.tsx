@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { LessonForm } from '@/components/admin/lesson-form';
 import { LessonsList } from '@/components/admin/lessons-list';
-import { AppButton } from '@/components/ui/appButton';
 import type { Lesson } from '@/lib/api';
 import { Plus } from 'lucide-react';
 import { createFileRoute } from '@tanstack/react-router';
@@ -17,6 +16,15 @@ function LessonsPage() {
 
 	const handleEdit = (lesson: Lesson) => {
 		setEditingLesson(lesson);
+		setShowForm(true);
+	};
+
+	const handleDuplicate = (lesson: Lesson) => {
+		const duplicated: Lesson = {
+			...lesson,
+			id: undefined,
+		};
+		setEditingLesson(duplicated);
 		setShowForm(true);
 	};
 
@@ -36,17 +44,20 @@ function LessonsPage() {
 			<div className="flex items-center justify-between">
 				<h1 className="text-2xl font-bold text-text">Управление занятиями</h1>
 				{!showForm && (
-					<AppButton onClick={() => setShowForm(true)}>
-						<Plus className="h-4 w-4 mr-2" />
+					<button
+						onClick={() => setShowForm(true)}
+						className="flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
+					>
+						<Plus className="h-4 w-4" />
 						Добавить занятие
-					</AppButton>
+					</button>
 				)}
 			</div>
 
 			{showForm ? (
 				<LessonForm lesson={editingLesson} onSuccess={handleFormSuccess} onCancel={handleFormCancel} />
 			) : (
-				<LessonsList onEdit={handleEdit} refreshTrigger={refreshTrigger} />
+				<LessonsList onEdit={handleEdit} onDuplicate={handleDuplicate} refreshTrigger={refreshTrigger} />
 			)}
 		</div>
 	);

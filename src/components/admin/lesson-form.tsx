@@ -2,16 +2,12 @@
 
 import type React from 'react';
 
-import { useState } from 'react';
-import { AppButton } from '@/components/ui/appButton';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { apiService, type Lesson } from '@/lib/api';
+import { useState, useEffect } from 'react';
+import { apiService, type Lesson, type Teacher, type Subject, type Location } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { MAX_PAIRS_COUNT } from '@/const/pairs';
 import { PARITY_LABELS } from '@/const/parity';
+import { Autocomplete } from '@/components/ui/autocomplete';
 
 interface LessonFormProps {
 	lesson?: Lesson;
@@ -45,7 +41,49 @@ export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 		day: lesson?.day || 'Monday',
 	});
 	const [isLoading, setIsLoading] = useState(false);
+	const [teachers, setTeachers] = useState<Teacher[]>([]);
+	const [subjects, setSubjects] = useState<Subject[]>([]);
+	const [locations, setLocations] = useState<Location[]>([]);
+	const [refsLoading, setRefsLoading] = useState(true);
 	const { toast } = useToast();
+
+	useEffect(() => {
+		const loadReferences = async () => {
+			try {
+				const [teachersData, subjectsData, locationsData] = await Promise.all([
+					apiService.getTeachers(),
+					apiService.getSubjects(),
+					apiService.getLocations(),
+				]);
+				setTeachers(teachersData);
+				setSubjects(subjectsData);
+				setLocations(locationsData);
+			} catch (err) {
+				console.error('Failed to load references:', err);
+			} finally {
+				setRefsLoading(false);
+			}
+		};
+		loadReferences();
+	}, []);
+
+	const handleAddTeacher = async (name: string) => {
+		const teacher = await apiService.createTeacher(name);
+		setTeachers((prev) => [...prev, teacher]);
+	};
+
+	const handleAddSubject = async (name: string) => {
+		const subject = await apiService.createSubject(name);
+		setSubjects((prev) => [...prev, subject]);
+	};
+
+	const handleAddLocation = async (fullName: string) => {
+		const parts = fullName.trim().split(/\s+/);
+		const building = parts[0] || '';
+		const room = parts.slice(1).join(' ') || '';
+		const location = await apiService.createLocation(building, room);
+		setLocations((prev) => [...prev, location]);
+	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -77,131 +115,131 @@ export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 		}
 	};
 
+	const locationItems = locations.map((loc) => ({
+		id: loc.id,
+		name: loc.full_name,
+	}));
+
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>{lesson ? 'Редактировать занятие' : 'Новое занятие'}</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<form onSubmit={handleSubmit} className="space-y-4">
-					<div className="grid gap-4 md:grid-cols-2">
-						<div className="space-y-2">
-							<Label htmlFor="name">Название занятия</Label>
-							<Input
-								id="name"
-								value={formData.name}
-								onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-								placeholder="Например: Математика"
-								required
-								disabled={isLoading}
-							/>
-						</div>
-
-						<div className="space-y-2">
-							<Label htmlFor="teacher">ФИО преподавателя</Label>
-							<Input
-								id="teacher"
-								value={formData.teacher}
-								onChange={(e) => setFormData({ ...formData, teacher: e.target.value })}
-								placeholder="Например: Иванов И.И."
-								required
-								disabled={isLoading}
-							/>
-						</div>
-
-						<div className="space-y-2">
-							<Label htmlFor="day">День недели</Label>
-							<Select
-								value={formData.day}
-								onValueChange={(value) => setFormData({ ...formData, day: value })}
-								disabled={isLoading}
-							>
-								<SelectTrigger>
-									<SelectValue placeholder="Выберите день" />
-								</SelectTrigger>
-								<SelectContent>
-									{DAYS.map((day) => (
-										<SelectItem key={day.value} value={day.value}>
-											{day.label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
-
-						<div className="space-y-2">
-							<Label htmlFor="pair_number">Номер пары</Label>
-							<Select
-								value={formData.pair_number.toString()}
-								onValueChange={(value) =>
-									setFormData({
-										...formData,
-										pair_number: Number.parseInt(value),
-									})
-								}
-								disabled={isLoading}
-							>
-								<SelectTrigger>
-									<SelectValue placeholder="Выберите пару" />
-								</SelectTrigger>
-								<SelectContent>
-									{PAIR_NUMBERS.map((num) => (
-										<SelectItem key={num} value={num.toString()}>
-											{num} пара
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
-
-						<div className="space-y-2">
-							<Label htmlFor="location">Место проведения</Label>
-							<Input
-								id="location"
-								value={formData.location}
-								onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-								placeholder="Например: Аудитория 101"
-								required
-								disabled={isLoading}
-							/>
-						</div>
-
-						<div className="space-y-2">
-							<Label htmlFor="type">Тип проведения</Label>
-							<Select
-								value={formData.type}
-								onValueChange={(value) =>
-									setFormData({
-										...formData,
-										type: value as 'static' | 'even' | 'odd',
-									})
-								}
-								disabled={isLoading}
-							>
-								<SelectTrigger>
-									<SelectValue placeholder="Выберите тип" />
-								</SelectTrigger>
-								<SelectContent>
-									{LESSON_TYPES.map((type) => (
-										<SelectItem key={type.value} value={type.value}>
-											{type.label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
+		<div className="bg-background-dark p-5 rounded-lg shadow-md">
+			<h2 className="text-xl font-bold text-primary mb-4">
+				{lesson ? 'Редактировать занятие' : 'Новое занятие'}
+			</h2>
+			<form onSubmit={handleSubmit} className="space-y-4">
+				<div className="grid gap-4 md:grid-cols-2">
+					<div className="space-y-2">
+						<label className="text-sm font-medium text-text">Предмет</label>
+						<Autocomplete
+							value={formData.name}
+							onChange={(value) => setFormData({ ...formData, name: value })}
+							items={subjects}
+							onAddNew={handleAddSubject}
+							placeholder="Например: Математика"
+							disabled={isLoading || refsLoading}
+						/>
 					</div>
 
-					<div className="flex gap-3 pt-4">
-						<AppButton type="submit" disabled={isLoading}>
-							{isLoading ? 'Сохранение...' : lesson ? 'Обновить' : 'Создать'}
-						</AppButton>
-						<AppButton type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
-							Отмена
-						</AppButton>
+					<div className="space-y-2">
+						<label className="text-sm font-medium text-text">Преподаватель</label>
+						<Autocomplete
+							value={formData.teacher}
+							onChange={(value) => setFormData({ ...formData, teacher: value })}
+							items={teachers}
+							onAddNew={handleAddTeacher}
+							placeholder="Например: Иванов И.И."
+							disabled={isLoading || refsLoading}
+						/>
 					</div>
-				</form>
-			</CardContent>
-		</Card>
+
+					<div className="space-y-2">
+						<label className="text-sm font-medium text-text">День недели</label>
+						<select
+							value={formData.day}
+							onChange={(e) => setFormData({ ...formData, day: e.target.value })}
+							disabled={isLoading}
+							className="w-full flex h-9 min-w-0 rounded-md bg-background-light px-3 py-1 text-sm shadow-sm transition-[color,box-shadow] outline-none focus-visible:ring-1 focus-visible:ring-border"
+						>
+							{DAYS.map((day) => (
+								<option key={day.value} value={day.value}>
+									{day.label}
+								</option>
+							))}
+						</select>
+					</div>
+
+					<div className="space-y-2">
+						<label className="text-sm font-medium text-text">Номер пары</label>
+						<select
+							value={formData.pair_number}
+							onChange={(e) =>
+								setFormData({
+									...formData,
+									pair_number: Number.parseInt(e.target.value),
+								})
+							}
+							disabled={isLoading}
+							className="w-full flex h-9 min-w-0 rounded-md bg-background-light px-3 py-1 text-sm shadow-sm transition-[color,box-shadow] outline-none focus-visible:ring-1 focus-visible:ring-border"
+						>
+							{PAIR_NUMBERS.map((num) => (
+								<option key={num} value={num}>
+									{num} пара
+								</option>
+							))}
+						</select>
+					</div>
+
+					<div className="space-y-2">
+						<label className="text-sm font-medium text-text">Место проведения</label>
+						<Autocomplete
+							value={formData.location}
+							onChange={(value) => setFormData({ ...formData, location: value })}
+							items={locationItems}
+							onAddNew={handleAddLocation}
+							placeholder="Например: Главный 101"
+							disabled={isLoading || refsLoading}
+						/>
+					</div>
+
+					<div className="space-y-2">
+						<label className="text-sm font-medium text-text">Тип проведения</label>
+						<select
+							value={formData.type}
+							onChange={(e) =>
+								setFormData({
+									...formData,
+									type: e.target.value as 'static' | 'even' | 'odd',
+								})
+							}
+							disabled={isLoading}
+							className="w-full flex h-9 min-w-0 rounded-md bg-background-light px-3 py-1 text-sm shadow-sm transition-[color,box-shadow] outline-none focus-visible:ring-1 focus-visible:ring-border"
+						>
+							{LESSON_TYPES.map((type) => (
+								<option key={type.value} value={type.value}>
+									{type.label}
+								</option>
+							))}
+						</select>
+					</div>
+				</div>
+
+				<div className="flex gap-3 pt-4">
+					<button
+						type="submit"
+						disabled={isLoading}
+						className="flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
+					>
+						{isLoading ? 'Сохранение...' : lesson ? 'Обновить' : 'Создать'}
+					</button>
+					<button
+						type="button"
+						onClick={onCancel}
+						disabled={isLoading}
+						className="flex items-center gap-2 px-4 py-2 rounded-md bg-background-light text-text-muted shadow-sm hover:bg-background transition-colors"
+					>
+						Отмена
+					</button>
+				</div>
+			</form>
+		</div>
 	);
 }
