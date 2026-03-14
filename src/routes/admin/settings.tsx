@@ -1,7 +1,5 @@
 import { ParityToggle } from '@/components/admin/parity-toggle';
 import { SystemInfo } from '@/components/admin/system-info';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AppButton } from '@/components/ui/appButton';
 import { createFileRoute } from '@tanstack/react-router';
 import { useNavigate } from '@tanstack/react-router';
 import { Eye, BookOpen, LayoutDashboard } from 'lucide-react';
@@ -14,32 +12,39 @@ function SettingsPage() {
 	const navigate = useNavigate();
 
 	return (
-		<div className="space-y-6">
-			<h1 className="text-2xl font-bold text-text">Настройки системы</h1>
+		<div>
+			<h2 className="text-lg font-semibold text-text mb-4">Настройки</h2>
 
-			<div className="grid gap-6 lg:grid-cols-2">
-				<div className="space-y-6">
+			<div className="grid gap-4 lg:grid-cols-2">
+				<div className="space-y-4">
 					<ParityToggle />
 
-					<Card>
-						<CardHeader>
-							<CardTitle>Быстрые ссылки</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-3">
-							<AppButton variant="outline" className="w-full justify-start" onClick={() => navigate({ to: '/schedule' })}>
-								<Eye className="h-4 w-4 mr-2" />
+					<div className="bg-background rounded-lg border border-border/50 p-4">
+						<h3 className="text-sm font-medium text-text mb-3">Быстрые ссылки</h3>
+						<div className="space-y-2">
+							<button
+								onClick={() => navigate({ to: '/schedule' })}
+								className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-text-muted hover:text-text hover:bg-background-light/50 transition-colors"
+							>
+								<Eye className="w-4 h-4" />
 								Публичное расписание
-							</AppButton>
-							<AppButton variant="outline" className="w-full justify-start" onClick={() => navigate({ to: '/admin/lessons' })}>
-								<BookOpen className="h-4 w-4 mr-2" />
+							</button>
+							<button
+								onClick={() => navigate({ to: '/admin/lessons' })}
+								className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-text-muted hover:text-text hover:bg-background-light/50 transition-colors"
+							>
+								<BookOpen className="w-4 h-4" />
 								Управление занятиями
-							</AppButton>
-							<AppButton variant="outline" className="w-full justify-start" onClick={() => navigate({ to: '/admin' })}>
-								<LayoutDashboard className="h-4 w-4 mr-2" />
+							</button>
+							<button
+								onClick={() => navigate({ to: '/admin' })}
+								className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-text-muted hover:text-text hover:bg-background-light/50 transition-colors"
+							>
+								<LayoutDashboard className="w-4 h-4" />
 								Панель управления
-							</AppButton>
-						</CardContent>
-					</Card>
+							</button>
+						</div>
+					</div>
 				</div>
 
 				<SystemInfo />

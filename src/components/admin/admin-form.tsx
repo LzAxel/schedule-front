@@ -3,10 +3,6 @@
 import type React from 'react';
 
 import { useState } from 'react';
-import { AppButton } from '@/components/ui/appButton';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { apiService } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff } from 'lucide-react';
@@ -63,7 +59,7 @@ export function AdminForm({ onSuccess, onCancel }: AdminFormProps) {
 		} catch (error) {
 			toast({
 				title: 'Ошибка',
-				description: 'Не удалось создать администратора. Возможно, такое имя пользователя уже существует.',
+				description: 'Не удалось создать администратора',
 				variant: 'destructive',
 			});
 		} finally {
@@ -71,88 +67,90 @@ export function AdminForm({ onSuccess, onCancel }: AdminFormProps) {
 		}
 	};
 
+	const inputClass = "w-full flex h-8 rounded-md bg-background-light px-2.5 text-sm border border-border/30 focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none";
+
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>Новый администратор</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<form onSubmit={handleSubmit} className="space-y-4">
-					<div className="space-y-2">
-						<Label htmlFor="username">Имя пользователя</Label>
-						<Input
-							id="username"
-							value={formData.username}
-							onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-							placeholder="Введите имя пользователя"
+		<div className="bg-background rounded-lg border border-border/50 p-4">
+			<h3 className="text-sm font-medium text-text mb-3">Новый администратор</h3>
+			<form onSubmit={handleSubmit} className="space-y-3">
+				<div className="space-y-1.5">
+					<label className="text-xs text-text-muted">Имя пользователя</label>
+					<input
+						type="text"
+						value={formData.username}
+						onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+						placeholder="Введите имя"
+						required
+						disabled={isLoading}
+						minLength={3}
+						className={inputClass}
+					/>
+				</div>
+
+				<div className="space-y-1.5">
+					<label className="text-xs text-text-muted">Пароль</label>
+					<div className="relative">
+						<input
+							type={showPassword ? 'text' : 'password'}
+							value={formData.password}
+							onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+							placeholder="Пароль"
 							required
 							disabled={isLoading}
-							minLength={3}
+							minLength={4}
+							className={inputClass + " pr-8"}
 						/>
+						<button
+							type="button"
+							onClick={() => setShowPassword(!showPassword)}
+							className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text"
+						>
+							{showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+						</button>
 					</div>
+				</div>
 
-					<div className="space-y-2">
-						<Label htmlFor="password">Пароль</Label>
-						<div className="relative">
-							<Input
-								id="password"
-								type={showPassword ? 'text' : 'password'}
-								value={formData.password}
-								onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-								placeholder="Введите пароль"
-								required
-								disabled={isLoading}
-								minLength={4}
-							/>
-							<AppButton
-								type="button"
-								variant="ghost"
-								size="icon"
-								className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-								onClick={() => setShowPassword(!showPassword)}
-								disabled={isLoading}
-							>
-								{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-							</AppButton>
-						</div>
+				<div className="space-y-1.5">
+					<label className="text-xs text-text-muted">Подтверждение</label>
+					<div className="relative">
+						<input
+							type={showConfirmPassword ? 'text' : 'password'}
+							value={formData.confirmPassword}
+							onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+							placeholder="Повторите пароль"
+							required
+							disabled={isLoading}
+							minLength={4}
+							className={inputClass + " pr-8"}
+						/>
+						<button
+							type="button"
+							onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+							className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text"
+						>
+							{showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+						</button>
 					</div>
+				</div>
 
-					<div className="space-y-2">
-						<Label htmlFor="confirmPassword">Подтверждение пароля</Label>
-						<div className="relative">
-							<Input
-								id="confirmPassword"
-								type={showConfirmPassword ? 'text' : 'password'}
-								value={formData.confirmPassword}
-								onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-								placeholder="Повторите пароль"
-								required
-								disabled={isLoading}
-								minLength={4}
-							/>
-							<AppButton
-								type="button"
-								variant="ghost"
-								size="icon"
-								className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-								onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-								disabled={isLoading}
-							>
-								{showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-							</AppButton>
-						</div>
-					</div>
-
-					<div className="flex gap-3 pt-4">
-						<AppButton type="submit" disabled={isLoading}>
-							{isLoading ? 'Создание...' : 'Создать администратора'}
-						</AppButton>
-						<AppButton type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
-							Отмена
-						</AppButton>
-					</div>
-				</form>
-			</CardContent>
-		</Card>
+				<div className="flex gap-2 pt-2">
+					<button
+						type="submit"
+						disabled={isLoading}
+						className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+					>
+						{isLoading ? 'Создание...' : 'Создать'}
+					</button>
+					<button
+						type="button"
+						onClick={onCancel}
+						disabled={isLoading}
+						className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-text-muted hover:text-text hover:bg-background-light/50 transition-colors"
+					>
+						Отмена
+					</button>
+				</div>
+			</form>
+		</div>
 	);
 }

@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { apiService, type Lesson } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
-import { Edit, Trash2, Clock, MapPin, User, Calendar } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { DAY_NAMES } from '@/const/days';
 import { LessonItem } from '@/components/lesson/lesson-item';
 
@@ -75,44 +74,41 @@ export function LessonsList({ onEdit, onDuplicate, refreshTrigger }: LessonsList
 
 	if (isLoading) {
 		return (
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+			<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 				{[...Array(6)].map((_, i) => (
-					<Card key={i}>
-						<CardHeader>
-							<div className="h-6 bg-muted rounded animate-pulse"></div>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-2">
-								<div className="h-4 bg-muted rounded animate-pulse"></div>
-								<div className="h-4 bg-muted rounded animate-pulse w-2/3"></div>
-							</div>
-						</CardContent>
-					</Card>
+					<div key={i} className="bg-background rounded-lg border border-border/50 p-3">
+						<div className="h-5 bg-muted rounded w-24 mb-2 animate-pulse"></div>
+						<div className="space-y-2">
+							<div className="h-4 bg-muted rounded animate-pulse"></div>
+							<div className="h-4 bg-muted rounded w-2/3 animate-pulse"></div>
+						</div>
+					</div>
 				))}
 			</div>
 		);
 	}
 
 	return (
-		<div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4">
+		<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 			{Object.keys(lessons).map((day) => {
+				const dayLessons = lessons[day as keyof typeof DAY_NAMES] || [];
 				return (
-					<Card key={day} className="h-fit">
-						<CardHeader className="pb-4">
-							<CardTitle className="text-xl text-center text-primary">
+					<div key={day} className="bg-background rounded-lg border border-border/50 overflow-hidden">
+						<div className="px-3 py-2 bg-background-light/50 border-b border-border/30">
+							<span className="text-sm font-medium text-primary">
 								{DAY_NAMES[day as keyof typeof DAY_NAMES]}
-							</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-3 grow-1">
-							{lessons[day as keyof typeof DAY_NAMES].length < 1 ? (
-								<div className="h-[calc(100%-2rem)] flex items-center justify-center">
-									<div className="text-center py-8 text-muted-foreground">
-										<Calendar className="h-12 w-12 mx-auto mb-3 opacity-50" />
-										<p>Занятий нет</p>
+							</span>
+						</div>
+						<div className="p-2 space-y-2">
+							{dayLessons.length === 0 ? (
+								<div className="py-6 flex items-center justify-center">
+									<div className="text-center text-text-muted">
+										<Calendar className="w-6 h-6 mx-auto mb-1 opacity-40" />
+										<p className="text-xs">Нет занятий</p>
 									</div>
 								</div>
 							) : (
-								lessons[day as keyof typeof DAY_NAMES].map((lesson) => (
+								dayLessons.map((lesson) => (
 									<LessonItem
 										lesson={lesson}
 										onDelete={() => handleDelete(lesson.id!)}
@@ -122,8 +118,8 @@ export function LessonsList({ onEdit, onDuplicate, refreshTrigger }: LessonsList
 									/>
 								))
 							)}
-						</CardContent>
-					</Card>
+						</div>
+					</div>
 				);
 			})}
 		</div>

@@ -1,19 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { apiService } from '@/lib/api';
 import { BookOpen, Users, Calendar, Clock } from 'lucide-react';
 
-interface DashboardStatsProps {
-	totalLessons: number;
-	totalAdmins: number;
-	currentParity: string;
-	lessonsThisWeek: number;
-}
-
 export function DashboardStats() {
-	const [stats, setStats] = useState<DashboardStatsProps | null>(null);
+	const [stats, setStats] = useState<{
+		totalLessons: number;
+		totalAdmins: number;
+		currentParity: string;
+		lessonsThisWeek: number;
+	} | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
@@ -47,18 +44,12 @@ export function DashboardStats() {
 
 	if (isLoading) {
 		return (
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+			<div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
 				{[...Array(4)].map((_, i) => (
-					<Card key={i}>
-						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-							<CardTitle className="text-sm font-medium">
-								<div className="h-4 bg-muted rounded animate-pulse"></div>
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="h-8 bg-muted rounded animate-pulse"></div>
-						</CardContent>
-					</Card>
+					<div key={i} className="bg-background rounded-lg border border-border/50 p-3">
+						<div className="h-4 bg-muted rounded w-20 mb-2 animate-pulse"></div>
+						<div className="h-6 bg-muted rounded w-12 animate-pulse"></div>
+					</div>
 				))}
 			</div>
 		);
@@ -67,47 +58,29 @@ export function DashboardStats() {
 	if (!stats) return null;
 
 	const statCards = [
-		{
-			title: 'Всего занятий',
-			value: stats.totalLessons,
-			icon: BookOpen,
-			description: 'в базе данных',
-		},
-		{
-			title: 'Администраторы',
-			value: stats.totalAdmins,
-			icon: Users,
-			description: 'активных пользователей',
-		},
-		{
-			title: 'Текущая неделя',
-			value: stats.currentParity,
-			icon: Calendar,
-			description: 'четность недели',
-		},
-		{
-			title: 'Занятий на неделе',
-			value: stats.lessonsThisWeek,
-			icon: Clock,
-			description: 'активных занятий',
-		},
+		{ title: 'Всего занятий', value: stats.totalLessons, icon: BookOpen },
+		{ title: 'Админы', value: stats.totalAdmins, icon: Users },
+		{ title: 'Неделя', value: stats.currentParity, icon: Calendar },
+		{ title: 'На неделе', value: stats.lessonsThisWeek, icon: Clock },
 	];
 
 	return (
-		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+		<div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
 			{statCards.map((stat, index) => {
 				const Icon = stat.icon;
 				return (
-					<Card key={index} className="bg-gradient">
-						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-							<CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-							<Icon className="h-4 w-4 text-muted-foreground" />
-						</CardHeader>
-						<CardContent>
-							<div className="text-2xl font-bold">{stat.value}</div>
-							<p className="text-xs text-muted-foreground">{stat.description}</p>
-						</CardContent>
-					</Card>
+					<div
+						key={index}
+						className="bg-background rounded-lg border border-border/50 p-3 flex items-center gap-3"
+					>
+						<div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+							<Icon className="w-4 h-4 text-primary" />
+						</div>
+						<div>
+							<div className="text-lg font-semibold text-text">{stat.value}</div>
+							<div className="text-xs text-text-muted">{stat.title}</div>
+						</div>
+					</div>
 				);
 			})}
 		</div>

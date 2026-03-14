@@ -5,7 +5,7 @@ import type React from 'react';
 import { useNavigate, useLocation } from '@tanstack/react-router';
 import { ThemeSwitcher } from '@/components/my-ui/ThemeSwitcher';
 import { AuthService } from '@/lib/auth';
-import { LogOut, Calendar, BookOpen, Users, Settings } from 'lucide-react';
+import { LogOut, Calendar, BookOpen, Users, Settings, Sparkles } from 'lucide-react';
 
 interface AdminLayoutProps {
 	children: React.ReactNode;
@@ -19,7 +19,7 @@ const navigation = [
 	{ id: 'settings', label: 'Настройки', icon: Settings, href: '/admin/settings' },
 ];
 
-export function AdminLayout({ children, activeTab }: AdminLayoutProps) {
+export function AdminLayout({ children }: AdminLayoutProps) {
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -35,13 +35,16 @@ export function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 	const currentPath = location.pathname;
 
 	return (
-		<div className="min-h-screen bg-background-dark p-5 flex flex-col gap-[24px]">
-			<div className="flex flex-col xl:flex-row gap-[12px] xl:items-center xl:justify-between">
-				<div className="flex items-center gap-[12px]">
+		<div className="min-h-screen bg-background-dark flex flex-col">
+			<header className="flex items-center justify-between px-4 py-3 border-b border-border/50">
+				<div className="flex items-center gap-3">
 					<ThemeSwitcher />
-					<h1 className="text-2xl font-bold text-primary">Админ-панель</h1>
+					<div className="flex items-center gap-2">
+						<Sparkles className="w-5 h-5 text-primary" />
+						<span className="text-lg font-semibold text-text">Админ-панель</span>
+					</div>
 				</div>
-				<div className="flex flex-wrap gap-[8px]">
+				<nav className="flex items-center gap-1">
 					{navigation.map((item) => {
 						const Icon = item.icon;
 						const isActive = currentPath === item.href || (item.href === '/admin' && currentPath === '/admin');
@@ -49,27 +52,30 @@ export function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 							<button
 								key={item.id}
 								onClick={() => handleNavigation(item.href)}
-								className={`w-fit flex items-center gap-[8px] p-[8px] rounded-md shadow-sm text-sm transition-colors ${
+								className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
 									isActive
-										? 'bg-primary text-primary-foreground'
-										: 'bg-background-light text-text-muted hover:bg-background'
+										? 'bg-primary/10 text-primary'
+										: 'text-text-muted hover:text-text hover:bg-background-light/50'
 								}`}
 							>
-								<Icon className="h-4 w-4" />
-								{item.label}
+								<Icon className="w-4 h-4" />
+								<span className="hidden sm:inline">{item.label}</span>
 							</button>
 						);
 					})}
+					<div className="w-px h-5 bg-border mx-1" />
 					<button
 						onClick={handleLogout}
-						className="w-fit flex items-center gap-[8px] p-[8px] rounded-md shadow-sm bg-background-light text-danger hover:bg-background text-sm"
+						className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium text-danger hover:bg-danger/10 transition-all"
 					>
-						<LogOut className="h-4 w-4" />
-						Выйти
+						<LogOut className="w-4 h-4" />
+						<span className="hidden sm:inline">Выйти</span>
 					</button>
-				</div>
-			</div>
-			{children}
+				</nav>
+			</header>
+			<main className="flex-1 p-4">
+				{children}
+			</main>
 		</div>
 	);
 }

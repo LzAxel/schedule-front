@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { AdminForm } from '@/components/admin/admin-form';
 import { AdminsList } from '@/components/admin/admins-list';
-import { AppButton } from '@/components/ui/appButton';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle, ArrowLeft, Plus, Shield } from 'lucide-react';
 import { createFileRoute } from '@tanstack/react-router';
 
@@ -24,51 +22,48 @@ function AdminsPage() {
 	};
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<h1 className="text-2xl font-bold text-text">Управление администраторами</h1>
+		<div>
+			<div className="flex items-center justify-between mb-4">
+				<h2 className="text-lg font-semibold text-text">Администраторы</h2>
 				{!showForm && (
-					<AppButton onClick={() => setShowForm(true)}>
-						<Plus className="h-4 w-4 mr-2" />
+					<button
+						onClick={() => setShowForm(true)}
+						className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+					>
+						<Plus className="w-4 h-4" />
 						Добавить
-					</AppButton>
+					</button>
 				)}
 			</div>
 
-			<Card className="border-yellow-500/30 bg-yellow-500/10">
-				<CardHeader className="pb-3">
-					<div className="flex items-center gap-2">
-						<AlertTriangle className="h-5 w-5 text-yellow-500" />
-						<CardTitle className="text-lg text-yellow-500">Важно</CardTitle>
-					</div>
-				</CardHeader>
-				<CardContent>
-					<CardDescription className="text-text-muted">
-						Новые администраторы получат полный доступ к системе.
-					</CardDescription>
-				</CardContent>
-			</Card>
+			<div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mb-4">
+				<div className="flex items-center gap-2">
+					<AlertTriangle className="w-4 h-4 text-yellow-500" />
+					<span className="text-sm text-yellow-600 dark:text-yellow-400">Новые администраторы получат полный доступ к системе</span>
+				</div>
+			</div>
 
 			{showForm ? (
-				<div className="space-y-4">
-					<AppButton variant="outline" onClick={handleFormCancel} className="bg-transparent">
-						<ArrowLeft className="h-4 w-4 mr-2" />
+				<div className="space-y-3">
+					<button
+						onClick={handleFormCancel}
+						className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-text-muted hover:text-text hover:bg-background-light/50 transition-colors"
+					>
+						<ArrowLeft className="w-4 h-4" />
 						Назад
-					</AppButton>
+					</button>
 					<AdminForm onSuccess={handleFormSuccess} onCancel={handleFormCancel} />
 				</div>
 			) : (
-				<Card>
-					<CardHeader>
-						<div className="flex items-center gap-2">
-							<Shield className="h-5 w-5 text-primary" />
-							<CardTitle>Список администраторов</CardTitle>
-						</div>
-					</CardHeader>
-					<CardContent>
+				<div className="bg-background rounded-lg border border-border/50 overflow-hidden">
+					<div className="px-4 py-3 bg-background-light/50 border-b border-border/30 flex items-center gap-2">
+						<Shield className="w-4 h-4 text-primary" />
+						<span className="text-sm font-medium text-text">Список администраторов</span>
+					</div>
+					<div className="p-4">
 						<AdminsList refreshTrigger={refreshTrigger} />
-					</CardContent>
-				</Card>
+					</div>
+				</div>
 			)}
 		</div>
 	);

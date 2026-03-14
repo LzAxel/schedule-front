@@ -1,12 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { apiService, type Admin } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { User, Shield, Crown, Trash2 } from 'lucide-react';
-import { AppButton } from '@/components/ui/appButton';
 
 interface AdminsListProps {
 	refreshTrigger: number;
@@ -23,7 +20,6 @@ export function AdminsList({ refreshTrigger }: AdminsListProps) {
 			.then(() => {
 				toast({
 					title: 'Администратор удалён',
-					variant: 'default',
 				});
 				setAdmins((prev) => prev.filter((admin) => admin.id !== id));
 			})
@@ -41,13 +37,12 @@ export function AdminsList({ refreshTrigger }: AdminsListProps) {
 			try {
 				setIsLoading(true);
 				const data = await apiService.getAdmins();
-				// Sort admins by ID to show the original admin first
 				const sortedAdmins = data.sort((a, b) => a.id - b.id);
 				setAdmins(sortedAdmins);
 			} catch (error) {
 				toast({
 					title: 'Ошибка',
-					description: 'Не удалось загрузить список администраторов',
+					description: 'Не удалось загрузить список',
 					variant: 'destructive',
 				});
 			} finally {
@@ -60,19 +55,15 @@ export function AdminsList({ refreshTrigger }: AdminsListProps) {
 
 	if (isLoading) {
 		return (
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+			<div className="space-y-2">
 				{[...Array(3)].map((_, i) => (
-					<Card key={i}>
-						<CardHeader>
-							<div className="h-6 bg-muted rounded animate-pulse"></div>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-2">
-								<div className="h-4 bg-muted rounded animate-pulse"></div>
-								<div className="h-4 bg-muted rounded animate-pulse w-2/3"></div>
-							</div>
-						</CardContent>
-					</Card>
+					<div key={i} className="flex items-center gap-3 p-3 rounded-lg border border-border/30">
+						<div className="w-8 h-8 bg-muted rounded-full animate-pulse"></div>
+						<div className="space-y-1">
+							<div className="h-4 bg-muted rounded w-24 animate-pulse"></div>
+							<div className="h-3 bg-muted rounded w-16 animate-pulse"></div>
+						</div>
+					</div>
 				))}
 			</div>
 		);
@@ -80,67 +71,49 @@ export function AdminsList({ refreshTrigger }: AdminsListProps) {
 
 	if (admins.length === 0) {
 		return (
-			<Card>
-				<CardContent className="pt-6">
-					<div className="text-center py-8">
-						<User className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-						<p className="text-muted-foreground">Администраторы не найдены</p>
-					</div>
-				</CardContent>
-			</Card>
+			<div className="text-center py-8 text-text-muted">
+				<User className="w-8 h-8 mx-auto mb-2 opacity-40" />
+				<p className="text-sm">Администраторы не найдены</p>
+			</div>
 		);
 	}
 
 	return (
-		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-			{admins.map((admin, index) => {
-				const isOriginalAdmin = admin.is_super; // First admin is the original hardcoded one
+		<div className="space-y-2">
+			{admins.map((admin) => {
+				const isOriginalAdmin = admin.is_super;
 
 				return (
-					<Card key={admin.id} className="hover:shadow-md transition-shadow">
-						<CardHeader className="pb-3">
-							<div className="flex items-center justify-between">
-								<CardTitle className="text-lg flex items-center gap-2">
-									{isOriginalAdmin ? (
-										<Crown className="h-5 w-5 text-yellow-500" />
-									) : (
-										<Shield className="h-5 w-5 text-primary" />
-									)}
-									{admin.username}
-								</CardTitle>
-								<Badge variant={isOriginalAdmin ? 'default' : 'secondary'}>
-									{isOriginalAdmin ? 'Главный' : 'Админ'}
-								</Badge>
+					<div
+						key={admin.id}
+						className="flex items-center justify-between p-3 rounded-lg border border-border/30 bg-background-light/30 hover:bg-background-light/50 transition-colors"
+					>
+						<div className="flex items-center gap-3">
+							<div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+								isOriginalAdmin ? 'bg-yellow-500/20' : 'bg-primary/10'
+							}`}>
+								{isOriginalAdmin ? (
+									<Crown className="w-4 h-4 text-yellow-500" />
+								) : (
+									<Shield className="w-4 h-4 text-primary" />
+								)}
 							</div>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-2 text-sm text-muted-foreground">
-								<div className="flex items-center gap-2">
-									<User className="h-4 w-4 shrink-0" />
-									<span>ID: {admin.id}</span>
+							<div>
+								<div className="text-sm font-medium text-text">{admin.username}</div>
+								<div className="text-xs text-text-muted">
+									{isOriginalAdmin ? 'Главный' : 'Админ'} • ID: {admin.id}
 								</div>
-								{isOriginalAdmin && (
-									<div className="pt-2 border-t">
-										<p className="text-xs text-muted-foreground">
-											Системный администратор с полными правами доступа
-										</p>
-									</div>
-								)}
-								{!admin.is_super && (
-									<div className="flex justify-end">
-										<AppButton
-											size="sm"
-											variant="outline"
-											onClick={() => handleDelete(admin.id)}
-											className="hover:bg-destructive text-destructive hover:text-white bg-transparent"
-										>
-											<Trash2 className="h-4 w-4" />
-										</AppButton>
-									</div>
-								)}
 							</div>
-						</CardContent>
-					</Card>
+						</div>
+						{!admin.is_super && (
+							<button
+								onClick={() => handleDelete(admin.id)}
+								className="p-1.5 rounded-md text-text-muted hover:text-danger hover:bg-danger/10 transition-colors"
+							>
+								<Trash2 className="w-4 h-4" />
+							</button>
+						)}
+					</div>
 				);
 			})}
 		</div>

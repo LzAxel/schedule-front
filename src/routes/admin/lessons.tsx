@@ -40,16 +40,16 @@ function LessonsPage() {
 	};
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<h1 className="text-2xl font-bold text-text">Управление занятиями</h1>
+		<div>
+			<div className="flex items-center justify-between mb-4">
+				<h2 className="text-lg font-semibold text-text">Управление занятиями</h2>
 				{!showForm && (
 					<button
 						onClick={() => setShowForm(true)}
-						className="flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
+						className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
 					>
-						<Plus className="h-4 w-4" />
-						Добавить занятие
+						<Plus className="w-4 h-4" />
+						Добавить
 					</button>
 				)}
 			</div>

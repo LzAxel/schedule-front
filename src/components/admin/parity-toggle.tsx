@@ -1,12 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AppButton } from '@/components/ui/appButton';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { apiService, type Settings } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar, RotateCcw, Info } from 'lucide-react';
+import { Calendar, RotateCcw } from 'lucide-react';
 import { isCurrentWeekEven } from '@/lib/parity';
 
 export function ParityToggle() {
@@ -24,7 +21,7 @@ export function ParityToggle() {
 			} catch (error) {
 				toast({
 					title: 'Ошибка',
-					description: 'Не удалось загрузить настройки четности',
+					description: 'Не удалось загрузить настройки',
 					variant: 'destructive',
 				});
 			} finally {
@@ -44,12 +41,11 @@ export function ParityToggle() {
 			setSettings(newSettings);
 			toast({
 				title: 'Четность изменена',
-				description: 'Настройки сохранены',
 			});
 		} catch (error) {
 			toast({
 				title: 'Ошибка',
-				description: 'Не удалось изменить четность недели',
+				description: 'Не удалось изменить четность',
 				variant: 'destructive',
 			});
 		} finally {
@@ -59,51 +55,37 @@ export function ParityToggle() {
 
 	if (isLoading) {
 		return (
-			<Card>
-				<CardHeader>
-					<div className="h-6 bg-muted rounded animate-pulse"></div>
-				</CardHeader>
-				<CardContent>
-					<div className="space-y-3">
-						<div className="h-4 bg-muted rounded animate-pulse"></div>
-						<div className="h-10 bg-muted rounded animate-pulse"></div>
-					</div>
-				</CardContent>
-			</Card>
+			<div className="bg-background rounded-lg border border-border/50 p-4">
+				<div className="h-5 bg-muted rounded w-32 mb-3 animate-pulse"></div>
+				<div className="h-10 bg-muted rounded animate-pulse"></div>
+			</div>
 		);
 	}
 
 	if (!settings) return null;
 
 	return (
-		<Card>
-			<CardHeader>
-				<div className="flex items-center gap-2">
-					<Calendar className="h-5 w-5 text-primary" />
-					<CardTitle>Четность недели</CardTitle>
-				</div>
-				<CardDescription>
-					Управление четностью учебных недель для корректного отображения расписания
-				</CardDescription>
-			</CardHeader>
-			<CardContent className="space-y-4">
-				<div className="flex items-center justify-between p-4 rounded-lg border bg-muted/50">
-					<div>
-						<p className="font-medium">Текущая неделя</p>
-						<p className="text-sm text-muted-foreground">
-							Определяет, какие занятия отображаются в расписании
-						</p>
-					</div>
-					<Badge variant="default" className="text-base px-3 py-1">
-						{isCurrentWeekEven(settings.parity) ? 'Нечётная' : 'Чётная'}
-					</Badge>
-				</div>
+		<div className="bg-background rounded-lg border border-border/50 p-4">
+			<div className="flex items-center gap-2 mb-3">
+				<Calendar className="w-4 h-4 text-primary" />
+				<span className="text-sm font-medium text-text">Четность недели</span>
+			</div>
 
-				<AppButton onClick={handleToggle} disabled={isToggling} className="w-full">
-					<RotateCcw className="h-4 w-4 mr-2" />
-					{isToggling ? 'Переключение...' : 'Переключить четность'}
-				</AppButton>
-			</CardContent>
-		</Card>
+			<div className="flex items-center justify-between p-3 rounded-lg bg-background-light/50 mb-3">
+				<span className="text-sm text-text-muted">Текущая</span>
+				<span className="text-sm font-medium text-primary">
+					{isCurrentWeekEven(settings.parity) ? 'Нечётная' : 'Чётная'}
+				</span>
+			</div>
+
+			<button
+				onClick={handleToggle}
+				disabled={isToggling}
+				className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+			>
+				<RotateCcw className={`w-4 h-4 ${isToggling ? 'animate-spin' : ''}`} />
+				{isToggling ? 'Переключение...' : 'Переключить'}
+			</button>
+		</div>
 	);
 }

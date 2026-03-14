@@ -121,14 +121,14 @@ export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 	}));
 
 	return (
-		<div className="bg-background-dark p-5 rounded-lg shadow-md">
-			<h2 className="text-xl font-bold text-primary mb-4">
-				{lesson ? 'Редактировать занятие' : 'Новое занятие'}
-			</h2>
-			<form onSubmit={handleSubmit} className="space-y-4">
-				<div className="grid gap-4 md:grid-cols-2">
-					<div className="space-y-2">
-						<label className="text-sm font-medium text-text">Предмет</label>
+		<div className="bg-background rounded-lg border border-border/50 p-4">
+			<h3 className="text-base font-semibold text-text mb-4">
+				{lesson ? 'Редактировать' : 'Новое занятие'}
+			</h3>
+			<form onSubmit={handleSubmit} className="space-y-3">
+				<div className="grid gap-3 md:grid-cols-2">
+					<div className="space-y-1.5">
+						<label className="text-xs font-medium text-text-muted">Предмет</label>
 						<Autocomplete
 							value={formData.name}
 							onChange={(value) => setFormData({ ...formData, name: value })}
@@ -139,8 +139,8 @@ export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<label className="text-sm font-medium text-text">Преподаватель</label>
+					<div className="space-y-1.5">
+						<label className="text-xs font-medium text-text-muted">Преподаватель</label>
 						<Autocomplete
 							value={formData.teacher}
 							onChange={(value) => setFormData({ ...formData, teacher: value })}
@@ -151,13 +151,13 @@ export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<label className="text-sm font-medium text-text">День недели</label>
+					<div className="space-y-1.5">
+						<label className="text-xs font-medium text-text-muted">День</label>
 						<select
 							value={formData.day}
 							onChange={(e) => setFormData({ ...formData, day: e.target.value })}
 							disabled={isLoading}
-							className="w-full flex h-9 min-w-0 rounded-md bg-background-light px-3 py-1 text-sm shadow-sm transition-[color,box-shadow] outline-none focus-visible:ring-1 focus-visible:ring-border"
+							className="w-full flex h-8 rounded-md bg-background-light px-2.5 text-sm border border-border/30 focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none"
 						>
 							{DAYS.map((day) => (
 								<option key={day.value} value={day.value}>
@@ -167,8 +167,8 @@ export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 						</select>
 					</div>
 
-					<div className="space-y-2">
-						<label className="text-sm font-medium text-text">Номер пары</label>
+					<div className="space-y-1.5">
+						<label className="text-xs font-medium text-text-muted">Пара</label>
 						<select
 							value={formData.pair_number}
 							onChange={(e) =>
@@ -178,7 +178,7 @@ export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 								})
 							}
 							disabled={isLoading}
-							className="w-full flex h-9 min-w-0 rounded-md bg-background-light px-3 py-1 text-sm shadow-sm transition-[color,box-shadow] outline-none focus-visible:ring-1 focus-visible:ring-border"
+							className="w-full flex h-8 rounded-md bg-background-light px-2.5 text-sm border border-border/30 focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none"
 						>
 							{PAIR_NUMBERS.map((num) => (
 								<option key={num} value={num}>
@@ -188,8 +188,8 @@ export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 						</select>
 					</div>
 
-					<div className="space-y-2">
-						<label className="text-sm font-medium text-text">Место проведения</label>
+					<div className="space-y-1.5">
+						<label className="text-xs font-medium text-text-muted">Аудитория</label>
 						<Autocomplete
 							value={formData.location}
 							onChange={(value) => setFormData({ ...formData, location: value })}
@@ -200,8 +200,8 @@ export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<label className="text-sm font-medium text-text">Тип проведения</label>
+					<div className="space-y-1.5">
+						<label className="text-xs font-medium text-text-muted">Тип</label>
 						<select
 							value={formData.type}
 							onChange={(e) =>
@@ -211,7 +211,7 @@ export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 								})
 							}
 							disabled={isLoading}
-							className="w-full flex h-9 min-w-0 rounded-md bg-background-light px-3 py-1 text-sm shadow-sm transition-[color,box-shadow] outline-none focus-visible:ring-1 focus-visible:ring-border"
+							className="w-full flex h-8 rounded-md bg-background-light px-2.5 text-sm border border-border/30 focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none"
 						>
 							{LESSON_TYPES.map((type) => (
 								<option key={type.value} value={type.value}>
@@ -222,11 +222,11 @@ export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 					</div>
 				</div>
 
-				<div className="flex gap-3 pt-4">
+				<div className="flex gap-2 pt-3">
 					<button
 						type="submit"
 						disabled={isLoading}
-						className="flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
+						className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
 					>
 						{isLoading ? 'Сохранение...' : lesson ? 'Обновить' : 'Создать'}
 					</button>
@@ -234,7 +234,7 @@ export function LessonForm({ lesson, onSuccess, onCancel }: LessonFormProps) {
 						type="button"
 						onClick={onCancel}
 						disabled={isLoading}
-						className="flex items-center gap-2 px-4 py-2 rounded-md bg-background-light text-text-muted shadow-sm hover:bg-background transition-colors"
+						className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-background-light text-text-muted text-sm font-medium hover:bg-background transition-colors"
 					>
 						Отмена
 					</button>
