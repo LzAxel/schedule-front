@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { apiService, type Schedule, type Settings } from '@/lib/api';
 import { getCurrentWeekParity, isCurrentWeekEven } from '@/lib/parity';
 import { DAY_NAMES } from '@/const/days';
@@ -10,10 +11,12 @@ import { getCurrentWeekRange } from '@/lib/date';
 import { WeekStatusDropdown } from '@/components/my-ui/WeekStatusDropdown';
 import { filterNotHiddenLessons } from '@/lib/lessons';
 import { ThemeSwitcher } from '@/components/my-ui/ThemeSwitcher';
+import { Settings as SettingsIcon } from 'lucide-react';
 
 const DAYS = Object.keys(DAY_NAMES);
 
 export function ScheduleGrid() {
+	const navigate = useNavigate();
 	const [schedule, setSchedule] = useState<Schedule>({});
 	const [settings, setSettings] = useState<Settings | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
@@ -67,6 +70,12 @@ export function ScheduleGrid() {
 		<div className="min-h-screen bg-background-dark p-5 flex flex-col gap-[24px]">
 			<div className="gap-[12px] flex flex-col xl:flex-row w-full xl:w-fit">
 				<ThemeSwitcher />
+				<button
+					onClick={() => navigate({ to: '/admin' })}
+					className="w-fit flex p-[8px] rounded-md shadow-sm bg-background-light text-text-muted text-sm hover:bg-background transition-colors"
+				>
+					<SettingsIcon />
+				</button>
 				<WeekStatus
 					isEven={isCurrentWeekEven(settings?.parity!)}
 					weekEndDate={currentWeekRange.end}
