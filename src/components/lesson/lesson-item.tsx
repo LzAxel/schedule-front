@@ -21,7 +21,7 @@ export const LessonItem: React.FC<Props> = ({ lesson, onEdit, onDelete, onDuplic
 	return (
 		<div
 			key={lesson.id}
-			className="group relative p-2.5 rounded-md bg-background-light/40 hover:bg-background-light/60 border border-transparent hover:border-border/30 transition-all"
+			className="group relative p-2.5 rounded-md bg-background-light/40 border border-transparent hover:border-border/30 transition-all"
 		>
 			<div className="flex items-start gap-2">
 				<div className={clsx(
@@ -64,27 +64,28 @@ export const LessonItem: React.FC<Props> = ({ lesson, onEdit, onDelete, onDuplic
 			</div>
 
 			{isEditable && (
-				<div className="absolute top-1.5 right-1.5 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+				<div className="mt-2 pt-2 border-t border-border/20 flex gap-1 md:absolute md:top-1.5 md:right-1.5 md:mt-0 md:pt-0 md:border-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
 					<button
 						onClick={(e) => { e.stopPropagation(); onEdit?.(); }}
-						className="p-1 rounded bg-background border border-border/30 hover:bg-background-light text-text-muted hover:text-text transition-colors"
+						className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors md:p-1"
 						title="Изменить"
 					>
-						<Edit className="w-3 h-3" />
+						<Edit className="w-3.5 h-3.5 md:w-3 md:h-3" />
+						<span className="hidden sm:inline">Изменить</span>
 					</button>
 					<button
 						onClick={(e) => { e.stopPropagation(); onDuplicate?.(); }}
-						className="p-1 rounded bg-background border border-border/30 hover:bg-background-light text-text-muted hover:text-text transition-colors"
+						className="p-1.5 rounded-md bg-background text-text-muted hover:bg-background-light text-xs transition-colors md:p-1"
 						title="Дублировать"
 					>
-						<Copy className="w-3 h-3" />
+						<Copy className="w-3.5 h-3.5 md:w-3 md:h-3" />
 					</button>
 					<button
 						onClick={(e) => { e.stopPropagation(); onDelete?.(); }}
-						className="p-1 rounded bg-background border border-border/30 hover:bg-danger/10 text-text-muted hover:text-danger transition-colors"
+						className="p-1.5 rounded-md bg-background text-danger hover:bg-danger/10 text-xs transition-colors md:p-1"
 						title="Удалить"
 					>
-						<Trash2 className="w-3 h-3" />
+						<Trash2 className="w-3.5 h-3.5 md:w-3 md:h-3" />
 					</button>
 				</div>
 			)}

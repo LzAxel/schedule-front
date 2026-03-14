@@ -120,7 +120,7 @@ export function Autocomplete({
 					onKeyDown={handleKeyDown}
 					placeholder={placeholder}
 					disabled={disabled}
-					className="w-full flex h-9 min-w-0 rounded-md bg-background-light px-3 py-1 text-sm shadow-sm transition-[color,box-shadow] outline-none focus-visible:ring-1 focus-visible:ring-border disabled:cursor-not-allowed disabled:opacity-50"
+					className="w-full flex h-8 rounded-md bg-background-light px-2.5 text-sm border border-border/30 focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-50"
 				/>
 				<button
 					type="button"
@@ -135,7 +135,7 @@ export function Autocomplete({
 			</div>
 
 			{isOpen && (filteredItems.length > 0 || showAddNew) && (
-				<div className="absolute z-50 w-full mt-1 py-1 bg-background-dark rounded-md shadow-lg border border-border max-h-60 overflow-auto">
+				<div className="absolute z-50 w-full mt-1 py-1 bg-background rounded-md shadow-lg border border-border/30 max-h-60 overflow-auto">
 					{filteredItems.map((item, index) => (
 						<button
 							key={item.id}
@@ -144,12 +144,12 @@ export function Autocomplete({
 							className={cn(
 								'w-full px-3 py-2 text-left text-sm flex items-center justify-between',
 								index === highlightedIndex
-									? 'bg-primary text-primary-foreground'
+									? 'bg-primary/10 text-primary'
 									: 'text-text hover:bg-background-light'
 							)}
 						>
 							<span>{item.name}</span>
-							{value === item.name && <LucideCheck className="h-4 w-4" />}
+							{value === item.name && <LucideCheck className="h-4 w-4 text-primary" />}
 						</button>
 					))}
 					{showAddNew && (
@@ -162,10 +162,8 @@ export function Autocomplete({
 								});
 							}}
 							className={cn(
-								'w-full px-3 py-2 text-left text-sm text-primary',
-								filteredItems.length === highlightedIndex
-									? 'bg-primary text-primary-foreground'
-									: 'hover:bg-background-light'
+								'w-full px-3 py-2 text-left text-sm text-primary hover:bg-background-light',
+								filteredItems.length === highlightedIndex && 'bg-primary/10'
 							)}
 						>
 							Добавить &quot;{inputValue}&quot;
