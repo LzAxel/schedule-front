@@ -15,6 +15,7 @@ export const ScheduleTableMobile = ({ schedule, weekStartDate, mode }: Props) =>
 	return (
 		<div className="flex flex-col gap-[10px]">
 			{Object.entries(DAY_NAMES).map(([weekday, weekdayName], index) => {
+				const daySchedule = schedule[weekday] || [];
 				return (
 					<div
 						key={weekday}
@@ -25,15 +26,15 @@ export const ScheduleTableMobile = ({ schedule, weekStartDate, mode }: Props) =>
 					>
 						<p className="text-xs text-text-muted">{`${weekdayName}, ${formatDateToDayMonth(weekStartDate, index)}`}</p>
 						<div className="flex flex-col gap-[6px]">
-							{schedule[weekday]?.length > 0 ? (
-								schedule[weekday].map((pair) => (
+							{daySchedule.length > 0 ? (
+								daySchedule.map((pair) => (
 									<ScheduleTableMobileItem
 										key={`${weekday}-${pair.id}`}
-										title={pair.name}
-										teacher={pair.teacher}
-										place={pair.location}
+										title={pair.subject_name}
+										teacher={pair.teacher_name}
+										place={pair.location_name}
 										pairNumber={pair.pair_number}
-										parity={pair.type}
+										parity={pair.parity_type}
 									/>
 								))
 							) : (

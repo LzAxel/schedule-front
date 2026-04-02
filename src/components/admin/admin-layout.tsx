@@ -5,7 +5,7 @@ import type React from 'react';
 import { useNavigate, useLocation } from '@tanstack/react-router';
 import { ThemeSwitcher } from '@/components/my-ui/ThemeSwitcher';
 import { AuthService } from '@/lib/auth';
-import { LogOut, Calendar, BookOpen, Users, Settings, Sparkles } from 'lucide-react';
+import { LogOut, Calendar, BookOpen, Users, Settings, Sparkles, GraduationCap, BookMarked, MapPin, History, CalendarDays } from 'lucide-react';
 
 interface AdminLayoutProps {
 	children: React.ReactNode;
@@ -15,6 +15,12 @@ interface AdminLayoutProps {
 const navigation = [
 	{ id: 'dashboard', label: 'Расписание', icon: Calendar, href: '/admin' },
 	{ id: 'lessons', label: 'Занятия', icon: BookOpen, href: '/admin/lessons' },
+	{ id: 'versions', label: 'Версии', icon: History, href: '/admin/versions' },
+	{ id: 'teachers', label: 'Преподаватели', icon: GraduationCap, href: '/admin/teachers' },
+	{ id: 'subjects', label: 'Предметы', icon: BookMarked, href: '/admin/subjects' },
+	{ id: 'locations', label: 'Аудитории', icon: MapPin, href: '/admin/locations' },
+	{ id: 'groups', label: 'Группы', icon: Users, href: '/admin/groups' },
+	{ id: 'semesters', label: 'Семестры', icon: CalendarDays, href: '/admin/semesters' },
 	{ id: 'admins', label: 'Админы', icon: Users, href: '/admin/admins' },
 	{ id: 'settings', label: 'Настройки', icon: Settings, href: '/admin/settings' },
 ];

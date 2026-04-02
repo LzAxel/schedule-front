@@ -1,20 +1,21 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { apiService, type Lesson } from '@/lib/api';
+import { apiService, type LessonExtended } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar, ChevronDown, ChevronRight } from 'lucide-react';
+import { Calendar, ChevronDown } from 'lucide-react';
 import { DAY_NAMES } from '@/const/days';
 import { LessonItem } from '@/components/lesson/lesson-item';
 
 interface LessonsListProps {
-	onEdit: (lesson: Lesson) => void;
-	onDuplicate: (lesson: Lesson) => void;
+	onEdit: (lesson: LessonExtended) => void;
+	onDuplicate: (lesson: LessonExtended) => void;
 	refreshTrigger: number;
+	versionId?: number;
 }
 
-export function LessonsList({ onEdit, onDuplicate, refreshTrigger }: LessonsListProps) {
-	const [lessons, setLessons] = useState<Record<keyof typeof DAY_NAMES, Lesson[]>>({
+export function LessonsList({ onEdit, onDuplicate, refreshTrigger, versionId }: LessonsListProps) {
+	const [lessons, setLessons] = useState<Record<keyof typeof DAY_NAMES, LessonExtended[]>>({
 		Monday: [],
 		Friday: [],
 		Saturday: [],
@@ -29,17 +30,17 @@ export function LessonsList({ onEdit, onDuplicate, refreshTrigger }: LessonsList
 	const fetchLessons = async () => {
 		try {
 			setIsLoading(true);
-			const data = await apiService.getLessons();
+			const data = await apiService.getLessons(versionId);
 
 			const groupedPairs = Object.fromEntries(
 				(Object.keys(DAY_NAMES) as Array<keyof typeof DAY_NAMES>).map((day) => [
 					day,
-					data.filter((lesson) => lesson.day === day).sort((a, b) => a.pair_number - b.pair_number),
+					data.filter((lesson) => lesson.day_of_week === day).sort((a, b) => a.pair_number - b.pair_number),
 				]),
-			) as Record<keyof typeof DAY_NAMES, Lesson[]>;
+			) as Record<keyof typeof DAY_NAMES, LessonExtended[]>;
 
 			setLessons(groupedPairs);
-		} catch (error) {
+		} catch {
 			toast({
 				title: 'Ошибка',
 				description: 'Не удалось загрузить список занятий',
@@ -52,7 +53,7 @@ export function LessonsList({ onEdit, onDuplicate, refreshTrigger }: LessonsList
 
 	useEffect(() => {
 		fetchLessons();
-	}, [refreshTrigger, toast]);
+	}, [refreshTrigger, versionId]);
 
 	const handleDelete = async (id: number) => {
 		if (!confirm('Вы уверены, что хотите удалить это занятие?')) return;
@@ -60,10 +61,8 @@ export function LessonsList({ onEdit, onDuplicate, refreshTrigger }: LessonsList
 		try {
 			await apiService.deleteLesson(id);
 			fetchLessons();
-			toast({
-				title: 'Занятие удалено',
-			});
-		} catch (error) {
+			toast({ title: 'Занятие удалено' });
+		} catch {
 			toast({
 				title: 'Ошибка',
 				description: 'Не удалось удалить занятие',
@@ -73,10 +72,10 @@ export function LessonsList({ onEdit, onDuplicate, refreshTrigger }: LessonsList
 	};
 
 	const toggleDay = (day: string) => {
-		setCollapsedDays(prev => ({ ...prev, [day]: !prev[day] }));
+		setCollapsedDays((prev) => ({ ...prev, [day]: !prev[day] }));
 	};
 
-	const hasAnyLessons = Object.values(lessons).some(arr => arr.length > 0);
+	const hasAnyLessons = Object.values(lessons).some((arr) => arr.length > 0);
 
 	if (isLoading) {
 		return (
@@ -123,13 +122,18 @@ export function LessonsList({ onEdit, onDuplicate, refreshTrigger }: LessonsList
 								{DAY_NAMES[day as keyof typeof DAY_NAMES]}
 								<span className="text-xs font-normal text-text-muted">({dayLessons.length})</span>
 							</span>
-							<ChevronDown className={`w-4 h-4 text-text-muted transition-transform md:hidden ${isCollapsed ? '-rotate-90' : ''}`} />
+							<ChevronDown
+								className={`w-4 h-4 text-text-muted transition-transform md:hidden ${
+									isCollapsed ? '-rotate-90' : ''
+								}`}
+							/>
 						</button>
 						<div className={`p-2 space-y-2 ${isCollapsed ? 'hidden md:block' : ''}`}>
 							{dayLessons.map((lesson) => (
 								<LessonItem
+									key={lesson.id}
 									lesson={lesson}
-									onDelete={() => handleDelete(lesson.id!)}
+									onDelete={() => handleDelete(lesson.id)}
 									onEdit={() => onEdit(lesson)}
 									onDuplicate={() => onDuplicate(lesson)}
 									isEditable={true}

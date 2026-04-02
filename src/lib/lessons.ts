@@ -1,25 +1,25 @@
-import { Lesson } from '@/lib/api';
+import { LessonExtended } from '@/lib/api';
 import { ParityType } from '@/types/parity';
 import { SettingsDisplayType } from '@/store/localSettingsStore';
 
 export const filterNotHiddenLessons = (
-	lessons: Lesson[],
+	lessons: LessonExtended[],
 	displayMode: SettingsDisplayType,
 	currentParity: ParityType,
-) => {
+): LessonExtended[] => {
 	if (displayMode === 'all') {
 		return lessons;
 	}
 
 	if (displayMode === 'current') {
-		return lessons.filter((lesson) => lesson.type === 'static' || lesson.type === currentParity);
+		return lessons.filter((lesson) => lesson.parity_type === 'static' || lesson.parity_type === currentParity);
 	} else {
-		return lessons.filter((lesson) => lesson.type === 'static' || lesson.type === displayMode);
+		return lessons.filter((lesson) => lesson.parity_type === 'static' || lesson.parity_type === displayMode);
 	}
 };
 
 export const isCurrentLessonDayEmpty = (
-	lessons: Lesson[],
+	lessons: LessonExtended[],
 	displayMode: SettingsDisplayType,
 	currentParity: ParityType,
 ) => {

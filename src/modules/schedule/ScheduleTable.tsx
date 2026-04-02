@@ -18,12 +18,13 @@ export const ScheduleTable: FC<Props> = ({ schedule, weekStartDate, mode }) => {
 	const maxPairInWeek = useMemo(() => {
 		return Object.values(schedule).reduce((acc, week) => {
 			let maxCount = acc;
-			week.forEach((pair) => {
-				if (pair.pair_number > maxCount) {
-					maxCount = pair.pair_number;
-				}
-			});
-
+			if (week) {
+				week.forEach((pair) => {
+					if (pair.pair_number > maxCount) {
+						maxCount = pair.pair_number;
+					}
+				});
+			}
 			return maxCount;
 		}, 1);
 	}, [schedule]);
@@ -67,7 +68,8 @@ export const ScheduleTable: FC<Props> = ({ schedule, weekStartDate, mode }) => {
 						>
 							{new Array(maxPairInWeek).fill(0).map((_, index) => {
 								const num = index + 1;
-								const pairs = schedule[weekday].filter((checkPair) => {
+								const daySchedule = schedule[weekday] || [];
+								const pairs = daySchedule.filter((checkPair) => {
 									return checkPair.pair_number === num;
 								});
 
@@ -76,18 +78,18 @@ export const ScheduleTable: FC<Props> = ({ schedule, weekStartDate, mode }) => {
 								}
 
 								if (mode === 'all') {
-									const odd = pairs.find((pair) => pair.type === 'odd');
-									const even = pairs.find((pair) => pair.type === 'even');
-									const staticPair = pairs.find((pair) => pair.type === 'static');
+									const odd = pairs.find((pair) => pair.parity_type === 'odd');
+									const even = pairs.find((pair) => pair.parity_type === 'even');
+									const staticPair = pairs.find((pair) => pair.parity_type === 'static');
 
 									if (staticPair) {
 										return (
 											<ScheduleTableItem
 												key={staticPair.id}
-												title={staticPair.name}
-												teacher={staticPair.teacher}
-												place={staticPair.location}
-												parity={staticPair.type}
+												title={staticPair.subject_name}
+												teacher={staticPair.teacher_name}
+												place={staticPair.location_name}
+												parity={staticPair.parity_type}
 											/>
 										);
 									}
@@ -100,10 +102,10 @@ export const ScheduleTable: FC<Props> = ({ schedule, weekStartDate, mode }) => {
 											{odd ? (
 												<ScheduleTableItem
 													key={odd.id}
-													title={odd.name}
-													teacher={odd.teacher}
-													place={odd.location}
-													parity={odd.type}
+													title={odd.subject_name}
+													teacher={odd.teacher_name}
+													place={odd.location_name}
+													parity={odd.parity_type}
 												/>
 											) : (
 												<ScheduleTableItemEmpty />
@@ -111,10 +113,10 @@ export const ScheduleTable: FC<Props> = ({ schedule, weekStartDate, mode }) => {
 											{even ? (
 												<ScheduleTableItem
 													key={even.id}
-													title={even.name}
-													teacher={even.teacher}
-													place={even.location}
-													parity={even.type}
+													title={even.subject_name}
+													teacher={even.teacher_name}
+													place={even.location_name}
+													parity={even.parity_type}
 												/>
 											) : (
 												<ScheduleTableItemEmpty />
@@ -126,10 +128,10 @@ export const ScheduleTable: FC<Props> = ({ schedule, weekStartDate, mode }) => {
 								return (
 									<ScheduleTableItem
 										key={pairs[0].id}
-										title={pairs[0].name}
-										teacher={pairs[0].teacher}
-										place={pairs[0].location}
-										parity={pairs[0].type}
+										title={pairs[0].subject_name}
+										teacher={pairs[0].teacher_name}
+										place={pairs[0].location_name}
+										parity={pairs[0].parity_type}
 									/>
 								);
 							})}

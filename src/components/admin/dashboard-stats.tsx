@@ -10,6 +10,7 @@ export function DashboardStats() {
 		totalAdmins: number;
 		currentParity: string;
 		lessonsThisWeek: number;
+		totalGroups: number;
 	} | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -17,20 +18,25 @@ export function DashboardStats() {
 		const fetchStats = async () => {
 			try {
 				setIsLoading(true);
-				const [lessons, admins, settings, schedule] = await Promise.all([
+				const [lessons, admins, settings, groups] = await Promise.all([
 					apiService.getLessons(),
 					apiService.getAdmins(),
 					apiService.getParity(),
-					apiService.getSchedule(),
+					apiService.getGroups(),
 				]);
 
-				const lessonsThisWeek = Object.values(schedule).flat().length;
+				let lessonsThisWeek = 0;
+				if (groups.length > 0) {
+					const schedule = await apiService.getSchedule(groups[0].id);
+					lessonsThisWeek = Object.values(schedule).flat().length;
+				}
 
 				setStats({
 					totalLessons: lessons.length,
 					totalAdmins: admins.length,
 					currentParity: settings.parity === 'even' ? 'нечётная' : 'чётная',
 					lessonsThisWeek,
+					totalGroups: groups.length,
 				});
 			} catch (error) {
 				console.error('Error fetching dashboard stats:', error);
@@ -59,7 +65,7 @@ export function DashboardStats() {
 
 	const statCards = [
 		{ title: 'Всего занятий', value: stats.totalLessons, icon: BookOpen },
-		{ title: 'Админы', value: stats.totalAdmins, icon: Users },
+		{ title: 'Группы', value: stats.totalGroups, icon: Users },
 		{ title: 'Неделя', value: stats.currentParity, icon: Calendar },
 		{ title: 'На неделе', value: stats.lessonsThisWeek, icon: Clock },
 	];

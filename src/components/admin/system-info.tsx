@@ -8,6 +8,7 @@ import { isCurrentWeekEven } from '@/lib/parity';
 interface SystemInfo {
 	totalLessons: number;
 	totalAdmins: number;
+	totalGroups: number;
 	currentParity: string;
 	lessonsThisWeek: number;
 	lastUpdate: string;
@@ -21,18 +22,23 @@ export function SystemInfo() {
 		const fetchSystemInfo = async () => {
 			try {
 				setIsLoading(true);
-				const [lessons, admins, settings, schedule] = await Promise.all([
+				const [lessons, admins, settings, groups] = await Promise.all([
 					apiService.getLessons(),
 					apiService.getAdmins(),
 					apiService.getParity(),
-					apiService.getSchedule(),
+					apiService.getGroups(),
 				]);
 
-				const lessonsThisWeek = Object.values(schedule).flat().length;
+				let lessonsThisWeek = 0;
+				if (groups.length > 0) {
+					const schedule = await apiService.getSchedule(groups[0].id);
+					lessonsThisWeek = Object.values(schedule).flat().length;
+				}
 
 				setSystemInfo({
 					totalLessons: lessons.length,
 					totalAdmins: admins.length,
+					totalGroups: groups.length,
 					currentParity: isCurrentWeekEven(settings.parity) ? 'нечётная' : 'чётная',
 					lessonsThisWeek,
 					lastUpdate: new Date().toLocaleString('ru-RU'),
@@ -67,7 +73,7 @@ export function SystemInfo() {
 
 	const infoItems = [
 		{ label: 'Всего занятий', value: systemInfo.totalLessons, icon: BookOpen },
-		{ label: 'Админы', value: systemInfo.totalAdmins, icon: Users },
+		{ label: 'Группы', value: systemInfo.totalGroups, icon: Users },
 		{ label: 'Неделя', value: systemInfo.currentParity, icon: Calendar },
 		{ label: 'На неделе', value: systemInfo.lessonsThisWeek, icon: Clock },
 	];

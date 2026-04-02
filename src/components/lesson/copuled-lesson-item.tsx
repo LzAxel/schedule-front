@@ -1,22 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, Clock, Edit, MapPin, Trash2, User } from 'lucide-react';
+import { MapPin, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { AppButton } from '@/components/ui/appButton';
-import { Lesson } from '@/lib/api';
+import { LessonExtended } from '@/lib/api';
 import React from 'react';
-import { DAY_NAMES } from '@/const/days';
 import { PAIR_TIMES } from '@/const/pairs';
 import { PARITY_LABELS } from '@/const/parity';
 import { ParityType } from '@/types/parity';
 
-const CoupledLesson = ({ lesson, currentParity }: { lesson: Lesson; currentParity?: ParityType }) => {
+const CoupledLesson = ({ lesson, currentParity }: { lesson: LessonExtended; currentParity?: ParityType }) => {
 	return (
 		<Card key={lesson.id} className="flex border-none flex-row p-0 gap-0 overflow-hidden shadow-none">
 			<div className="px-3 pl-2 flex flex-col grow-1">
 				<CardHeader className="block p-0 pb-2">
 					<div className="flex flex-col items-start justify-between overflow-hidden">
 						<CardTitle className="text-lg text-pretty leading-tight overflow-hidden truncate">
-							{lesson.name}
+							{lesson.subject_name}
 						</CardTitle>
 					</div>
 				</CardHeader>
@@ -24,21 +22,21 @@ const CoupledLesson = ({ lesson, currentParity }: { lesson: Lesson; currentParit
 					<div className="space-y-2 text-sm">
 						<div className="flex items-center gap-2 text-muted-foreground">
 							<User className="h-4 w-4 shrink-0" />
-							<span className="text-pretty">{lesson.teacher}</span>
+							<span className="text-pretty">{lesson.teacher_name}</span>
 						</div>
 
 						<div className="flex items-center gap-2 text-muted-foreground">
 							<MapPin className="h-4 w-4 shrink-0" />
-							<span>{lesson.location}</span>
+							<span>{lesson.location_name}</span>
 						</div>
 					</div>
 
 					<div className="">
 						<Badge
-							variant={lesson.type === 'static' || lesson.type === currentParity ? 'default' : 'outline'}
+							variant={lesson.parity_type === 'static' || lesson.parity_type === currentParity ? 'default' : 'outline'}
 							className="text-xs"
 						>
-							{PARITY_LABELS[lesson.type]}
+							{PARITY_LABELS[lesson.parity_type as keyof typeof PARITY_LABELS]}
 						</Badge>
 					</div>
 				</CardContent>
@@ -48,13 +46,13 @@ const CoupledLesson = ({ lesson, currentParity }: { lesson: Lesson; currentParit
 };
 
 interface Props {
-	lessons: Lesson[];
+	lessons: LessonExtended[];
 	currentParity?: ParityType;
 }
 
 export const CoupledLessonItem: React.FC<Props> = ({ lessons, currentParity }) => {
-	const evenLesson = lessons.find((lesson) => lesson.type === 'even');
-	const oddLesson = lessons.find((lesson) => lesson.type === 'odd');
+	const evenLesson = lessons.find((lesson) => lesson.parity_type === 'even');
+	const oddLesson = lessons.find((lesson) => lesson.parity_type === 'odd');
 
 	const pair_number = (evenLesson || oddLesson)!.pair_number;
 

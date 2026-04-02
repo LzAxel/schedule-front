@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { apiService, type Lesson } from '@/lib/api';
+import { apiService, type LessonExtended } from '@/lib/api';
 import { Clock, MapPin, User } from 'lucide-react';
 import { DAY_NAMES } from '@/const/days';
 
 export function RecentActivity() {
-	const [recentLessons, setRecentLessons] = useState<Lesson[]>([]);
+	const [recentLessons, setRecentLessons] = useState<LessonExtended[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
@@ -16,8 +16,7 @@ export function RecentActivity() {
 			try {
 				setIsLoading(true);
 				const lessons = await apiService.getLessons();
-				// Get the 5 most recent lessons (by ID)
-				const recent = lessons.sort((a, b) => (b.id || 0) - (a.id || 0)).slice(0, 5);
+				const recent = lessons.sort((a, b) => b.id - a.id).slice(0, 5);
 				setRecentLessons(recent);
 			} catch (error) {
 				console.error('Error fetching recent lessons:', error);
@@ -65,7 +64,7 @@ export function RecentActivity() {
 								<div className="w-2 h-2 bg-primary rounded-full mt-2 shrink-0"></div>
 								<div className="flex-1 min-w-0">
 									<div className="flex items-start justify-between mb-2">
-										<h4 className="font-medium text-sm text-pretty leading-tight">{lesson.name}</h4>
+										<h4 className="font-medium text-sm text-pretty leading-tight">{lesson.subject_name}</h4>
 										<Badge variant="secondary" className="ml-2 shrink-0">
 											{lesson.pair_number} пара
 										</Badge>
@@ -74,15 +73,15 @@ export function RecentActivity() {
 									<div className="space-y-1 text-xs text-muted-foreground">
 										<div className="flex items-center gap-2">
 											<User className="h-3 w-3 shrink-0" />
-											<span className="truncate">{lesson.teacher}</span>
+											<span className="truncate">{lesson.teacher_name}</span>
 										</div>
 										<div className="flex items-center gap-2">
 											<MapPin className="h-3 w-3 shrink-0" />
-											<span>{lesson.location}</span>
+											<span>{lesson.location_name}</span>
 										</div>
 										<div className="flex items-center gap-2">
 											<Clock className="h-3 w-3 shrink-0" />
-											<span>{DAY_NAMES[lesson.day as keyof typeof DAY_NAMES]}</span>
+											<span>{DAY_NAMES[lesson.day_of_week as keyof typeof DAY_NAMES]}</span>
 										</div>
 									</div>
 								</div>
